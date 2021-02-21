@@ -1,24 +1,39 @@
 <?php
 session_start();
-include_once '../process/connector.php';
-
-$cat_id = @$_GET['id'];
-session_unset();
-if (!empty($cat_id)) {
-    $_SESSION['category_id'] = $cat_id;
-    header('Location: choose_subject.php');
+if (empty($_SESSION['category_id'])) {
+    header('Location: index.php');
 }
+include_once '../process/connector.php';
+$cat_id = $_SESSION['category_id'];
+$sql = "SELECT CAT_ID AS ID, NAME AS CAT_NAME, DESCRIPTION AS CAT_DESC FROM TB_CATEGORY WHERE CAT_ID = $cat_id";
+$result = mysqli_query($link, $sql);
+$category = mysqli_fetch_assoc($result);
+$count = 0;
+
+// Start testing
+$msg = "";
+$subId = @$_POST['subId'];
+if (isset($_POST['submit'])) {
+    if (empty($subId)) {
+        $msg = "Please select subject before start testing...";
+    } else {
+        $_SESSION['subject_id'] = $subId;
+        header('Location: start_testing.php');
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Exam | Student</title>
+    <title>Exam | Subject</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="../assets/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="../assets/plugins/iCheck/all.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -133,43 +148,131 @@ if (!empty($cat_id)) {
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Category</li>
+                <li class="active">Subjects</li>
             </ol>
+            <a href="index.php" class="btn btn-sm bg-orange" style="margin-top: 10px;">
+                <i class="fa fa-chevron-circle-left"></i> Back
+            </a>
         </section>
 
         <!-- Main content -->
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
         <section class="content container-fluid">
+
             <div class="row">
-            <?php
-            $sql = "SELECT CAT_ID AS ID, NAME AS CAT_NAME, DESCRIPTION AS CAT_DESC FROM TB_CATEGORY";
-            $result = mysqli_query($link, $sql);
-            $no = 0;
-            while ($row = mysqli_fetch_assoc($result)) {
-            ?>
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box">
-                        <a href="index.php?id=<?=$row['ID']?>">
                         <span class="info-box-icon bg-green">
                                 <i class="fa fa-check-circle"></i>
                         </span>
-                        </a>
 
                         <div class="info-box-content">
-                            <span class="info-box-number"><?=htmlspecialchars($row['CAT_NAME'])?></span>
-                            <span class="info-box-more"><?=htmlspecialchars($row['CAT_DESC'])?></span>
+                            <span class="info-box-number"><?=htmlspecialchars($category['CAT_NAME'])?></span>
+                            <span class="info-box-more"><?=htmlspecialchars($category['CAT_DESC'])?></span>
                         </div>
-                        <!-- /.info-box-content -->
                     </div>
-                    <!-- /.info-box -->
                 </div>
-                <!-- /.col -->
-            <?php
-            }
-            mysqli_close($link);
-            ?>
             </div>
-            <!-- /.row -->
+
+            <?php
+            if ($msg != "") {
+            ?>
+            <div class="alert alert-warning alert-dismissible" id="success-alert">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i> Alert!</h4>
+                <?=$msg?>
+            </div>
+            <?php } ?>
+
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Please make your choice ans press <b>[Start Testing...]</b> button to start the test</h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Subject Title</th>
+                                <th>Description</th>
+                                <th>Level</th>
+                                <th>Pass %</th>
+                                <th>Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            $sql = "SELECT * FROM TB_SUBJECTS WHERE CAT_ID = $cat_id";
+                            $result = mysqli_query($link, $sql);
+                            $count = mysqli_num_rows($result);
+                            if ($count > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                            ?>
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="subId" class="flat-red"  value="<?= $row['sub_id']; ?>">
+                                    </label>
+                                </td>
+                                <td><?=htmlspecialchars($row['title'])?></td>
+                                <td><?=htmlspecialchars($row['description'])?></td>
+                                <td>
+                                    <?php
+                                    if ($row['level'] == 1) {
+                                        echo "<span class=\"text-center badge bg-green\">Easiest</span>";
+                                    }else if($row['level'] == 2){
+                                        echo "<span class=\"text-center badge bg-blue\">Normal</span>";
+                                    }else if($row['level'] == 3){
+                                        echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
+                                    }else {
+                                        echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
+                                    }
+                                    ?>
+                                </td>
+                                <td><?=htmlspecialchars($row['pass_percent'])?> %</td>
+                                <td>
+                                    <span class="text-center badge bg-aqua-active">
+                                        <?=htmlspecialchars($row['give_minute'])?> Minute
+                                    </span>
+                                </td>
+                            </tr>
+                            <?php
+                            }
+                            }else{
+                            ?>
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <p class="alert bg-danger" style="font-size: large; margin-top: 20px;" >
+                                        This Category don't have subject
+                                    </p>
+                                </td>
+                            </tr>
+                            <?php
+                            }
+                            mysqli_close($link);
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+            </div>
+            <!-- /.box -->
+
+            <div class="row">
+                <?php if ($count > 0) { ?>
+                <div class="col-md-12 col-sm-6 col-xs-12">
+                    <input type="submit" name="submit" class="btn btn-lg bg-blue" value="Start Testing...">
+                </div>
+                <?php } ?>
+            </div>
         </section>
+        </form>
     </div>
 
     <footer class="main-footer">
@@ -180,6 +283,19 @@ if (!empty($cat_id)) {
 
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script>
+    $(function () {
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass   : 'iradio_flat-green'
+        });
+
+        $("#success-alert").fadeTo(5000, 500).slideUp(500, function(){
+            $("#success-alert").slideUp(500);
+        });
+    });
+</script>
 </body>
 </html>

@@ -128,7 +128,7 @@ if (!empty($cat_id)) {
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Exam
+                Home
                 <small>Test System</small>
             </h1>
             <ol class="breadcrumb">
@@ -140,33 +140,33 @@ if (!empty($cat_id)) {
         <!-- Main content -->
         <section class="content container-fluid">
             <div class="row">
-            <?php
-            $sql = "SELECT CAT_ID AS ID, NAME AS CAT_NAME, DESCRIPTION AS CAT_DESC FROM TB_CATEGORY";
-            $result = mysqli_query($link, $sql);
-            $no = 0;
-            while ($row = mysqli_fetch_assoc($result)) {
-            ?>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <a href="index.php?id=<?=$row['ID']?>">
+                <?php
+                $sql = "SELECT CAT_ID AS ID, NAME AS CAT_NAME, DESCRIPTION AS CAT_DESC FROM TB_CATEGORY";
+                $result = mysqli_query($link, $sql);
+                $no = 0;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <a href="index.php?id=<?=$row['ID']?>">
                         <span class="info-box-icon bg-green">
                                 <i class="fa fa-check-circle"></i>
                         </span>
-                        </a>
+                            </a>
 
-                        <div class="info-box-content">
-                            <span class="info-box-number"><?=htmlspecialchars($row['CAT_NAME'])?></span>
-                            <span class="info-box-more"><?=htmlspecialchars($row['CAT_DESC'])?></span>
+                            <div class="info-box-content">
+                                <span class="info-box-number"><?=htmlspecialchars($row['CAT_NAME'])?></span>
+                                <span class="info-box-more"><?=htmlspecialchars($row['CAT_DESC'])?></span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
-                        <!-- /.info-box-content -->
+                        <!-- /.info-box -->
                     </div>
-                    <!-- /.info-box -->
-                </div>
-                <!-- /.col -->
-            <?php
-            }
-            mysqli_close($link);
-            ?>
+                    <!-- /.col -->
+                    <?php
+                }
+                mysqli_close($link);
+                ?>
             </div>
             <!-- /.row -->
         </section>
