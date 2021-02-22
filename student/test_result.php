@@ -155,15 +155,25 @@ $data = mysqli_fetch_assoc($result);
                 <div class="row">
                     <div class="col-md-4">
                         <div class="info-box">
-                            <span class="info-box-icon bg-orange">
+                            <span class="info-box-icon bg-orange-active">
                                 <i class="fa fa-user-circle"></i>
                             </span>
                             <div class="info-box-content">
-                                <span class="info-box-number"><?= htmlspecialchars('1: Khamphai') ?></span>
-                                <span class="info-box-more">
-                                <span class="text-center badge bg-aqua-active">
-                                    <?=htmlspecialchars('User')?>
+                                <span class="info-box-number">
+                                    <span class="text-center badge bg-aqua-active">
+                                        <?=htmlspecialchars('User')?>
+                                    </span>
+                                    <?= htmlspecialchars('1: Khamphai') ?>
                                 </span>
+                                <span class="info-box-more">
+                                    <span class="text-center badge bg-gray-active">
+                                        Test Date: <?=htmlspecialchars($data['TEST_DATE'])?>
+                                    </span>
+                                </span>
+                                <span class="info-box-more">
+                                    <span class="text-center badge bg-gray-active">
+                                        Use Time: <?=htmlspecialchars(gmdate("H:i:s", $data['TEST_MINUTE']))?>
+                                    </span>
                                 </span>
                             </div>
                         </div>
@@ -176,9 +186,14 @@ $data = mysqli_fetch_assoc($result);
                             <div class="info-box-content">
                                 <span class="info-box-number"><?= htmlspecialchars($data['CAT_NAME']) ?></span>
                                 <span class="info-box-more">
-                                <span class="text-center badge bg-aqua-active">
-                                    <?=htmlspecialchars('Category')?>
+                                    <span class="text-center badge bg-aqua-active">
+                                        <?=htmlspecialchars('Category')?>
+                                    </span>
                                 </span>
+                                <span class="info-box-more">
+                                    <span class="text-center badge bg-gray-active">
+                                        Pass Percent: <?=htmlspecialchars($data['PASS_PERCENT'])?> %
+                                    </span>
                                 </span>
                             </div>
                         </div>
@@ -194,6 +209,10 @@ $data = mysqli_fetch_assoc($result);
                                 <span class="text-center badge bg-aqua-active">
                                     <?=htmlspecialchars('Subject')?>
                                 </span>
+                                </span>
+                                <span class="info-box-more">
+                                <span class="text-center badge bg-gray-active">
+                                    Time: <?= htmlspecialchars($data['SUB_TIME']) ?> Minute
                                 </span>
                             </div>
                         </div>
@@ -259,25 +278,27 @@ $data = mysqli_fetch_assoc($result);
                         </div>
                         <!-- /.table-responsive -->
                     </div>
-                    <div class="box-footer with-border">
-                        <?php
-                        $pass_percent = (int) $data['PASS_PERCENT'];
-                        $mark_percent = round($percent/$q_count);
-                        if ($mark_percent >= $pass_percent) {
-                            $judge = "<span class='text-green text-bold'>PASSED</span>";
-                        }else{
-                            $judge = "<span class='text-red text-bold'>FAILED</span>";
-                        }
-
-                        ?>
-                        <h4 class="box-title">Mark <b><?= $mark_percent ?>%</b> [<?= $judge ?>]</h4>
-                    </div>
                 </div>
                 <!-- /.box -->
 
-                <div class="row pull-right">
-                    <div class="col-md-12">
-                        <a href="index.php" class="btn btn-lg bg-green"><i class="fa fa-check-circle"></i>&nbsp; Finished</a>
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php
+                                $pass_percent = (int) $data['PASS_PERCENT'];
+                                $mark_percent = round($percent/$q_count);
+                                if ($mark_percent >= $pass_percent) {
+                                    $judge = "<span class='text-green text-bold'>PASSED</span>";
+                                }else{
+                                    $judge = "<span class='text-red text-bold'>FAILED</span>";
+                                }
+
+                                ?>
+                                <span class="pull-left" style="font-size: xx-large">Mark percent : <b><?= $mark_percent ?>%</b> [<?= $judge ?>]</span>
+                                <a href="index.php" class="btn btn-lg bg-green pull-right"><i class="fa fa-check-circle"></i>&nbsp; Finished</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

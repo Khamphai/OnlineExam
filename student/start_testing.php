@@ -28,6 +28,8 @@ if ($count != 0) {
 }
 $question = $_SESSION['question'];
 $_SESSION['q_count'] = count($question);
+$_SESSION['give_minute'] = $data['SUB_TIME'];
+$_SESSION['action'] = "next";
 
 $msg = "";
 $qId = @$_POST['question_id'];
@@ -41,7 +43,7 @@ if (!isset($_SESSION['answers'])) {
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // store count last time
-    $_SESSION['time'] = (int) $time_count - 1;
+    $_SESSION['time'] = (int) $time_count;
 
     if ($_POST['Clicked'] == 'prev'){
         $index -= 1;
@@ -73,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $answer = ["ans_col" => $ans_col, "q_id" => $qId, "ans_sel" => $ans];
                 array_push($_SESSION['answers'], $answer);
             }
-
+            $_SESSION['action'] = "submit";
             // TODO :: Process submit answer
             header("Location: ../process/process_score.php");
         }
