@@ -27,6 +27,7 @@ if ($count != 0) {
     $_SESSION['question'] = $array;
 }
 $question = $_SESSION['question'];
+$_SESSION['q_count'] = count($question);
 
 $msg = "";
 $qId = @$_POST['question_id'];
@@ -34,10 +35,14 @@ $index = @$_POST['question_index'];;
 $ans_type = @$_POST['answer_type'];
 $ans_col = @$_POST['ans_col'];
 $ans_sel = @$_POST['ans_sel'];
+$time_count = @$_POST['time_on'];
 if (!isset($_SESSION['answers'])) {
     $_SESSION['answers'] = array();
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // store count last time
+    $_SESSION['time'] = (int) $time_count - 1;
+
     if ($_POST['Clicked'] == 'prev'){
         $index -= 1;
     }else if (empty($ans_sel)) {
@@ -70,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // TODO :: Process submit answer
-            header("Location: test_result.php");
+            header("Location: ../process/process_score.php");
         }
     }
 }
@@ -79,29 +84,19 @@ if (!isset($_SESSION['time'])) {
     $_SESSION['time'] = $data['SUB_TIME'] * 60; // Time to Seconds;
 }
 
-//$current_date = date("h:i:s");
-//echo "Current date " . $current_date . "<br>";
-//
-//if (!isset($_SESSION['start_test']) || !isset($_SESSION['end_test'])) {
-//    $startTime = date("h:i:s");
-//    $_SESSION['start_test'] = $startTime;
-//    $minute = "+".$data['SUB_TIME'] ." minutes";
-//    echo "Minute = " . $minute . "<br>";
-//    $endTime = strtotime($minute, strtotime($startTime));
-//    $_SESSION['end_test'] = date('h:i:s', $endTime);
-//}
-//
+if (!isset($_SESSION['start_test']) || !isset($_SESSION['end_test'])) {
+    $startTime = date("h:i:s");
+    $_SESSION['start_test'] = $startTime;
+    $minute = "+".$data['SUB_TIME'] ." minutes";
+    $endTime = strtotime($minute, strtotime($startTime));
+    $_SESSION['end_test'] = date('h:i:s', $endTime);
+}
+
 //echo "Start Testing " . $_SESSION['start_test'] . "<br>";
 //echo "End Testing " .$_SESSION['end_test'] . "<br>";
-//
-//$diff = strtotime($_SESSION['end_test']) - strtotime($current_date);
-//$Hours = floor(($diff/60)/60);
-//echo $Hours . "<br>";
-
-
 
 $time_on = $_SESSION['time'];
-header( "refresh:$time_on; url=test_result.php");
+header( "refresh:$time_on; url=../process/process_score.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -313,6 +308,7 @@ header( "refresh:$time_on; url=test_result.php");
                                 <input type="hidden" name="question_id" value="<?=$question[$index]['q_id']?>"/>
                                 <input type="hidden" name="answer_type" value="<?=$question[$index]['q_answer_type']?>"/>
                                 <input type="hidden" name="ans_col" value="<?=$question[$index]['q_answer']?>"/>
+                                <input type="hidden" name="time_on" id="time_count"/>
                                 <?php if ($question[$index]['q_sel1']) {?>
                                     <tr>
                                         <td class="text-center" style="width: 50px;">1</td>
@@ -462,6 +458,7 @@ header( "refresh:$time_on; url=test_result.php");
         let timeDec = function (){
             timeLeft--;
             document.getElementById('countdown').innerHTML = timeLeft;
+            document.getElementById('time_count').value = timeLeft;
             if(timeLeft === 0){
                 clearInterval(cinterval);
             }

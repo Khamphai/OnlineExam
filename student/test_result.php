@@ -1,17 +1,21 @@
 <?php
 session_start();
-if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id']) || empty($_SESSION['answers'])) {
+if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id']) || empty($_SESSION['answers']) || empty($_SESSION['test_id'])) {
     header('Location: index.php');
 }
 include_once '../process/connector.php';
 $cat_id = $_SESSION['category_id'];
 $sub_id = $_SESSION['subject_id'];
 $answers = $_SESSION['answers'];
+$test_id = $_SESSION['test_id'];
+$q_count = $_SESSION['q_count'];
 
 // Load info has relation
-$sql = "SELECT A.TITLE AS SUB_TITLE, A.DESCRIPTION AS SUB_DESC, A.GIVE_MINUTE AS SUB_TIME,
-       B.NAME AS CAT_NAME, B.DESCRIPTION AS CAT_DESC FROM TB_SUBJECTS A INNER JOIN TB_CATEGORY B
-            ON(A.CAT_ID=B.CAT_ID) WHERE A.SUB_ID = $sub_id AND B.CAT_ID = $cat_id";
+$sql = "SELECT A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
+        B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT, C.NAME AS CAT_NAME, C.DESCRIPTION AS CAT_DESC FROM TB_TEST_RESULT A
+           INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
+           INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
+        WHERE A.TEST_ID = $test_id AND B.SUB_ID = $sub_id AND B.CAT_ID = $cat_id";
 $result = mysqli_query($link, $sql);
 $data = mysqli_fetch_assoc($result);
 
@@ -26,7 +30,6 @@ $data = mysqli_fetch_assoc($result);
     <link rel="stylesheet" href="../assets/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="../assets/plugins/iCheck/all.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
     <link rel="stylesheet"
@@ -142,7 +145,7 @@ $data = mysqli_fetch_assoc($result);
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Testing</li>
+                <li class="active">Test Result</li>
             </ol>
         </section>
 
@@ -199,7 +202,7 @@ $data = mysqli_fetch_assoc($result);
 
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h4 class="box-title">Mark <b>50%</b> [FAILED]</h4>
+                        <h4 class="box-title">Your result testing score</h4>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
@@ -214,41 +217,37 @@ $data = mysqli_fetch_assoc($result);
                                     <th>Your Choice</th>
                                     <th>Correct Answer</th>
                                     <th>Judge</th>
-                                    <th>Explain</th>
-                                    <th>Review</th>
+                                    <th>Explain/Review</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
-                                $sql = "SELECT * FROM TB_SUBJECTS WHERE CAT_ID = $cat_id";
+                                $sql = "SELECT * FROM TB_SCORE WHERE TEST_ID = $test_id";
                                 $result = mysqli_query($link, $sql);
                                 $no = 0;
+                                $percent = 0;
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     ?>
                                     <tr>
                                         <td>
                                             <?=@++$no?>
                                         </td>
-                                        <td><?=htmlspecialchars($row['title'])?></td>
-                                        <td><?=htmlspecialchars($row['description'])?></td>
+                                        <td><?=htmlspecialchars($row['sc_choice'])?></td>
+                                        <td><?=htmlspecialchars($row['sc_answer'])?></td>
                                         <td>
                                             <?php
-                                            if ($row['level'] == 1) {
-                                                echo "<span class=\"text-center badge bg-green\">Easiest</span>";
-                                            }else if($row['level'] == 2){
-                                                echo "<span class=\"text-center badge bg-blue\">Normal</span>";
-                                            }else if($row['level'] == 3){
-                                                echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
-                                            }else {
-                                                echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
+                                            if ($row['sc_judge'] === 'Good') {
+                                                $percent += 100;
+                                                echo "<span class=\"text-center badge bg-green\">Good</span>";
+                                            } else if($row['sc_judge'] === 'N.G'){
+                                                echo "<span class=\"text-center badge bg-orange\">N.G</span>";
+                                            } else {
+                                                echo "<span class=\"text-center badge bg-red\">Bad</span>";
                                             }
                                             ?>
                                         </td>
-                                        <td><?=htmlspecialchars($row['pass_percent'])?> %</td>
                                         <td>
-                                <span class="text-center badge bg-aqua-active">
-                                    <?=htmlspecialchars($row['give_minute'])?> Minute
-                                </span>
+                                            <a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i class="fa fa-bars"></i></a>
                                         </td>
                                     </tr>
                                     <?php
@@ -260,10 +259,23 @@ $data = mysqli_fetch_assoc($result);
                         </div>
                         <!-- /.table-responsive -->
                     </div>
+                    <div class="box-footer with-border">
+                        <?php
+                        $pass_percent = (int) $data['PASS_PERCENT'];
+                        $mark_percent = round($percent/$q_count);
+                        if ($mark_percent >= $pass_percent) {
+                            $judge = "<span class='text-green text-bold'>PASSED</span>";
+                        }else{
+                            $judge = "<span class='text-red text-bold'>FAILED</span>";
+                        }
+
+                        ?>
+                        <h4 class="box-title">Mark <b><?= $mark_percent ?>%</b> [<?= $judge ?>]</h4>
+                    </div>
                 </div>
                 <!-- /.box -->
 
-                <div class="row">
+                <div class="row pull-right">
                     <div class="col-md-12">
                         <a href="index.php" class="btn btn-lg bg-green"><i class="fa fa-check-circle"></i>&nbsp; Finished</a>
                     </div>
@@ -280,41 +292,6 @@ $data = mysqli_fetch_assoc($result);
 
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
-<script>
-    $(function () {
-        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-            checkboxClass: 'icheckbox_flat-green',
-            radioClass: 'iradio_flat-green'
-        });
-
-        $("#success-alert").fadeTo(2500, 500).slideUp(500, function () {
-            $("#success-alert").slideUp(500);
-        });
-    });
-
-    $(document).ready(function()
-    {
-        $('.clickBtn').click(function()
-        {
-            let ButtonID = $(this).attr('id');
-            $('#Clicked').val(ButtonID);
-        });
-    });
-</script>
-<script type="text/javascript">
-    (function () {
-        let timeLeft = <?php echo $time_on; ?>, cinterval;
-        let timeDec = function (){
-            timeLeft--;
-            document.getElementById('countdown').innerHTML = timeLeft;
-            if(timeLeft === 0){
-                clearInterval(cinterval);
-            }
-        };
-        cinterval = setInterval(timeDec, 1000);
-    })();
-</script>
 </body>
 </html>
