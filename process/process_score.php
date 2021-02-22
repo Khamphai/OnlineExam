@@ -23,7 +23,8 @@ $state = true;
 
 // TODO :: Insert to tb_test_result
 $ts_date = date("Y-m-d");
-$sql = "INSERT INTO `tb_test_result` (`test_id`, `test_date`, `test_minute`, `user_id`, `sub_id`) VALUES (NULL, CAST('". $ts_date ."' AS DATE), $test_minute, 1, $sub_id)";
+$user_id = $_SESSION['user_id'];
+$sql = "INSERT INTO `tb_test_result` (`test_id`, `test_date`, `test_minute`, `user_id`, `sub_id`) VALUES (NULL, CAST('". $ts_date ."' AS DATE), $test_minute, $user_id, $sub_id)";
 if (mysqli_query($link, $sql)) {
     $last_test_id = mysqli_insert_id($link);
     $_SESSION['test_id'] = $last_test_id;

@@ -38,18 +38,24 @@ if (isset($_POST['submit'])) {
                     $_SESSION['full_name'] = $row['fullname'];
                     $_SESSION['email'] = $row['email'];
                     $_SESSION['role'] = $row['role'];
+                    $_SESSION['user_id'] = $row['user_id'];
+                    $_SESSION['created_at'] = $row['created_at'];
                     header("Location: student/index.php");
                 } else if ($row['role'] === 'teacher') {
                     $_SESSION['state'] = "login";
                     $_SESSION['full_name'] = $row['fullname'];
                     $_SESSION['email'] = $row['email'];
+                    $_SESSION['user_id'] = $row['user_id'];
                     $_SESSION['role'] = $row['role'];
+                    $_SESSION['created_at'] = $row['created_at'];
                     header("Location: teacher/index.php");
                 } else if ($row['role'] === 'admin') {
                     $_SESSION['state'] = "login";
                     $_SESSION['full_name'] = $row['fullname'];
                     $_SESSION['email'] = $row['email'];
+                    $_SESSION['user_id'] = $row['user_id'];
                     $_SESSION['role'] = $row['role'];
+                    $_SESSION['created_at'] = $row['created_at'];
                     header("Location: admin/index.php");
                 } else{
                     $msg = "Invalid Role user";
