@@ -1,23 +1,65 @@
 <?php
 session_start();
+include_once 'process/connector.php';
+
+// check state
+if ($_SESSION['state'] === 'login') {
+    header("Location: index.php");
+}
 
 $msg = "";
 $email = @$_POST['email'];
 $password = @$_POST['password'];
 $remember = @$_POST['remember'];
+if (isset($_POST['submit'])) {
 
-if(!empty($email) && !empty($password))
-{
-    $msg = "Please enter user / pass";
+    if(empty(trim($_POST["email"]))){
+        $msg = "Please enter your email.";
+    }else if(empty(trim($_POST["password"]))){
+        $msg = "Please enter your password.";
+    } else {
+        $email = stripcslashes($email);
+        $password = stripcslashes($password);
+        $email = mysqli_real_escape_string($link, $email);
+        $password = mysqli_real_escape_string($link, $password);
+
+        $sql = "SELECT * FROM `tb_users` WHERE `email` = '$email' AND password = '$password'";
+        $result = mysqli_query($link, $sql);
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $count = mysqli_num_rows($result);
+
+        if($count == 1){
+
+            if ($row['status'] != 1) {
+                $msg = "Your user has been disabled";
+            }else {
+                if ($row['role'] === 'student') {
+                    $_SESSION['state'] = "login";
+                    $_SESSION['full_name'] = $row['fullname'];
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['role'] = $row['role'];
+                    header("Location: student/index.php");
+                } else if ($row['role'] === 'teacher') {
+                    $_SESSION['state'] = "login";
+                    $_SESSION['full_name'] = $row['fullname'];
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['role'] = $row['role'];
+                    header("Location: teacher/index.php");
+                } else if ($row['role'] === 'admin') {
+                    $_SESSION['state'] = "login";
+                    $_SESSION['full_name'] = $row['fullname'];
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['role'] = $row['role'];
+                    header("Location: admin/index.php");
+                } else{
+                    $msg = "Invalid Role user";
+                }
+            }
+        } else{
+            $msg = "Login failed. Invalid username or password";
+        }
+    }
 }
-
-// TODO :: 1. Check
-// TODO :: 2. Check
-// TODO :: 3. Check
-// TODO :: 4. Check
-// TODO :: 5. Check
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +72,7 @@ if(!empty($email) && !empty($password))
   <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="assets/plugins/Ionicons/css/ionicons.min.css">
   <link rel="stylesheet" href="assets/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="assets/plugins/iCheck/square/green.css">
+    <link rel="stylesheet" href="assets/plugins/iCheck/all.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition login-page">
@@ -38,13 +80,20 @@ if(!empty($email) && !empty($password))
   <div class="login-logo">
     <a href="#"><b>Exam</b> Online</a>
   </div>
+    <?php
+    if ($msg != "") { ?>
+        <div class="alert alert-warning alert-dismissible" id="success-alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i> Alert!</h4>
+            <?= $msg ?>
+        </div>
+    <?php } ?>
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
 
     <form action="login.php" method="post">
-      <p class="login-box-msg text-danger"><?=$msg?></p>
       <div class="form-group has-feedback">
-        <input type="email" name="email" class="form-control" placeholder="Email" required>
+        <input type="email" name="email" value="<?=$email?>"  class="form-control" placeholder="Email" required>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
@@ -55,12 +104,12 @@ if(!empty($email) && !empty($password))
         <div class="col-xs-8">
           <div class="checkbox icheck">
             <label>
-              <input type="checkbox" name="remember"> &nbsp; Remember Me
+                <input type="checkbox" name="remember" value="remember" class="flat-red" <?php if ($remember == 'remember') echo 'checked'; ?>> &nbsp; Remember Me
             </label>
           </div>
         </div>
         <div class="col-xs-4">
-          <button type="submit" class="btn bg-green btn-block">Sign In</button>
+          <input type="submit" name="submit" class="btn bg-green btn-block" value="Sign In">
         </div>
       </div>
     </form>
@@ -74,11 +123,14 @@ if(!empty($email) && !empty($password))
 <script src="assets/plugins/iCheck/icheck.min.js"></script>
 <script>
   $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-green',
-      radioClass: 'iradio_square-green',
-      increaseArea: '20%' /* optional */
-    });
+      $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+          checkboxClass: 'icheckbox_flat-green',
+          radioClass: 'iradio_flat-green'
+      });
+
+      $("#success-alert").fadeTo(5000, 500).slideUp(500, function () {
+          $("#success-alert").slideUp(500);
+      });
   });
 </script>
 </body>

@@ -3,7 +3,6 @@ session_start();
 include_once '../process/connector.php';
 
 $cat_id = @$_GET['id'];
-session_unset();
 if (!empty($cat_id)) {
     $_SESSION['category_id'] = $cat_id;
     header('Location: choose_subject.php');
@@ -128,7 +127,7 @@ if (!empty($cat_id)) {
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Home
+                Exam
                 <small>Test System</small>
             </h1>
             <ol class="breadcrumb">
@@ -148,7 +147,7 @@ if (!empty($cat_id)) {
                     ?>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="info-box">
-                            <a href="index.php?id=<?=$row['ID']?>">
+                            <a href="choose_category.php?id=<?=$row['ID']?>">
                         <span class="info-box-icon bg-green">
                                 <i class="fa fa-check-circle"></i>
                         </span>

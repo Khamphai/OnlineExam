@@ -264,13 +264,17 @@ if (isset($_POST['submit'])) {
             </div>
             <!-- /.box -->
 
-            <div class="row">
-                <?php if ($count > 0) { ?>
-                <div class="col-md-12 col-sm-6 col-xs-12">
-                    <input type="submit" name="submit" class="btn btn-lg bg-blue" value="Start Testing...">
+            <?php if ($count > 0) { ?>
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="submit" name="submit" class="btn btn-lg bg-blue pull-right" value="Start Testing...">
+                        </div>
+                    </div>
                 </div>
-                <?php } ?>
             </div>
+            <?php } ?>
         </section>
         </form>
     </div>
