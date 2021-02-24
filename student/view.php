@@ -5,6 +5,9 @@ $q_id = @$_GET['vQID'];
 if (empty($test_id) || empty($q_id)) {
     header('Location: test_result.php');
 }
+if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id']) || empty($_SESSION['answers']) || empty($_SESSION['test_id'])) {
+    header('Location: index.php');
+}
 include_once '../process/connector.php';
 
 // Load info has relation
