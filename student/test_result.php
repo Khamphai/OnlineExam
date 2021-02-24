@@ -97,7 +97,9 @@ $data = mysqli_fetch_assoc($result);
                                     <span class="text-center badge bg-aqua-active">
                                         <?=htmlspecialchars('User')?>
                                     </span>
-                                    <?= htmlspecialchars('1: Khamphai') ?>
+                                    <?= htmlspecialchars($_SESSION['user_id']) ?>
+                                    :
+                                    <?= htmlspecialchars($_SESSION['full_name']) ?>
                                 </span>
                                 <span class="info-box-more">
                                     <span class="text-center badge bg-gray-active">
@@ -200,7 +202,7 @@ $data = mysqli_fetch_assoc($result);
                                             ?>
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i class="fa fa-bars"></i></a>
+                                            <a href="view.php?vTestID=<?=$test_id?>&vQID=<?=$row['q_id']?>" class="btn btn-sm bg-gray-active">GO &nbsp; <i class="fa fa-bars"></i></a>
                                         </td>
                                     </tr>
                                     <?php

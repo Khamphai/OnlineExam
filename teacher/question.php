@@ -1,3 +1,7 @@
+<?php
+session_start();
+include_once '../process/connector.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,82 +12,15 @@
     <link rel="stylesheet" href="../assets/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="../assets/plugins/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
 
-    <header class="main-header">
-
-        <a href="index.php" class="logo">
-            <span class="logo-mini"><b>E</b>xam</span>
-            <span class="logo-lg"><b>Exam</b> Online</span>
-        </a>
-
-        <nav class="navbar navbar-static-top" role="navigation">
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
-                            <li>
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="footer"><a href="#">View all</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="../assets/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Khamphai KNVS</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="user-header">
-                                <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                                <p>
-                                    Khamphai KNVS - SWG9
-                                    <small>Member since Feb. 2021</small>
-                                </p>
-                            </li>
-                            <li class="user-body">
-                                <div class="row">
-
-                                </div>
-                            </li>
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Log off</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    <?php include_once 'header.php'; ?>
     <aside class="main-sidebar">
 
         <section class="sidebar">
@@ -133,7 +70,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Category
+                Question
                 <small>Teacher</small>
             </h1>
             <ol class="breadcrumb">
@@ -149,6 +86,176 @@
               | Your Page Content Here |
               -------------------------->
 
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="form-inline pull-left">
+                                <select name="category" class="form-control input-lg">
+                                    <?php
+                                    $sql = "SELECT CAT_ID, NAME FROM TB_CATEGORY";
+                                    $result = mysqli_query($link, $sql);
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        ?>
+                                        <option value="<?= $row['CAT_ID']; ?>" <?php if ($category_id === $row['cat_id']) echo "selected"; ?>>
+                                            <?= $row['NAME']; ?>
+                                        </option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                                <select name="subject" class="form-control input-lg">
+                                    <?php
+                                    $sql = "SELECT SUB_ID, TITLE FROM TB_SUBJECTS WHERE CAT_ID = 5";
+                                    $result = mysqli_query($link, $sql);
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        ?>
+                                        <option value="<?= $row['SUB_ID']; ?>" <?php if ($category_id === $row['SUB_ID']) echo "selected"; ?>>
+                                            <?= $row['TITLE']; ?>
+                                        </option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                                <button type="submit" class="btn btn-lg bg-gray-active"><i class="fa fa-search"></i>&nbsp; SEARCH</button>
+                            </form>
+                            <a href="index.php" class="btn btn-lg bg-blue pull-right"><i class="fa fa-search"></i>&nbsp; ADD QUESTION</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Questions for Examination</h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Level / Time</th>
+                                <th>Pass %</th>
+                                <th>Score</th>
+                                <th>Status</th>
+                                <th>View</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            $user_id = $_SESSION['user_id'];
+                            $sql = "SELECT A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
+                                           B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT,
+                                           C.NAME AS CAT_NAME FROM TB_TEST_RESULT A
+                                               INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
+                                               INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
+                                    WHERE A.USER_ID = $user_id ORDER BY A.TEST_ID DESC";
+                            $result = mysqli_query($link, $sql);
+                            $no = 0;
+                            $count = mysqli_num_rows($result);
+                            if ($count > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $test_id = $row['TEST_ID'];
+                                    $sql_score = "SELECT SC_CHOICE, SC_ANSWER, SC_JUDGE FROM TB_SCORE where TEST_ID = $test_id";
+                                    $result_score = mysqli_query($link, $sql_score);
+                                    $count_score = mysqli_num_rows($result_score);
+                                    $percent = 0;
+                                    if ($count_score > 0) {
+                                        while ($row_score = mysqli_fetch_assoc($result_score)) {
+                                            if ($row_score['SC_JUDGE'] === 'Good') {
+                                                $percent += 100;
+                                            }
+                                        }
+                                        $pass_percent = (int) $row['PASS_PERCENT'];
+                                        $mark_percent = round($percent/$count_score);
+                                        if ($mark_percent >= $pass_percent) {
+                                            $judge = "<span class='text-green text-bold'>PASSED</span>";
+                                        }else{
+                                            $judge = "<span class='text-red text-bold'>FAILED</span>";
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?= @++$no; ?>
+                                            </td>
+                                            <td>
+                                                <?= htmlspecialchars($row['SUB_TITLE']) ?>
+                                                <br/>
+                                                <span class="text-center badge bg-gray-active">
+                                                <?= htmlspecialchars($row['CAT_NAME']) ?>
+                                            </span>
+                                            </td>
+                                            <td>
+                                            <span class="text-center badge bg-blue-active">
+                                                Test Date: <?= htmlspecialchars($row['TEST_DATE']) ?>
+                                            </span>
+                                                <br/>
+                                                <span class="text-center badge bg-blue-active">
+                                                Use Time: <?= htmlspecialchars(gmdate("H:i:s", $row['TEST_MINUTE'])) ?>
+                                            </span>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if ($row['LEVEL'] == 1) {
+                                                    echo "<span class=\"text-center badge bg-green\">Easiest</span>";
+                                                } else if ($row['level'] == 2) {
+                                                    echo "<span class=\"text-center badge bg-blue\">Normal</span>";
+                                                } else if ($row['level'] == 3) {
+                                                    echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
+                                                } else {
+                                                    echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
+                                                }
+                                                ?>
+                                                <br/>
+                                                <span class="text-center badge bg-teal-active">
+                                        <?= htmlspecialchars($row['SUB_TIME']) ?> Minute
+                                    </span>
+                                            </td>
+                                            <td>
+                                                <span class='text-green text-bold'><?= htmlspecialchars($row['PASS_PERCENT']) ?> %</span>
+                                            </td>
+                                            <td>
+                                                <span class='text-blue text-bold'><?= $mark_percent ?>%</span>
+                                            </td>
+                                            <td>
+                                                <?=$judge;?>
+                                            </td>
+                                            <td><a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i
+                                                            class="fa fa-bars"></i></a></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                }
+                            } else {
+                                ?>
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
+                                            Not found your exam [<a href="choose_category.php" class="text-green">Get
+                                                starting</a>]
+                                        </p>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            mysqli_close($link);
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+            </div>
+            <!-- /.box -->
+
         </section>
     </div>
 
@@ -160,6 +267,13 @@
 
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/select2/dist/js/select2.full.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>
 </body>
 </html>

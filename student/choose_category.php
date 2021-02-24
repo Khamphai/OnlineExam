@@ -72,6 +72,17 @@ if (!empty($cat_id)) {
 
         <!-- Main content -->
         <section class="content container-fluid">
+
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="pull-left text-light-blue" style="font-size: x-large">&nbsp;<i class="fa fa-check-circle"></i>&nbsp; Choose Category for start Testing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <?php
                 $sql = "SELECT CAT_ID AS ID, NAME AS CAT_NAME, DESCRIPTION AS CAT_DESC FROM TB_CATEGORY";
