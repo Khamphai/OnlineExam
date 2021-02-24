@@ -1,6 +1,8 @@
 <?php
 session_start();
 include_once '../process/connector.php';
+$category_id = @$_GET['category'];
+$subject_id = @$_GET['subject'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +32,7 @@ include_once '../process/connector.php';
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?=htmlspecialchars($_SESSION['full_name'])?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -51,18 +53,6 @@ include_once '../process/connector.php';
                 <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
                 <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
                 <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Question</span></a></li>
-                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#">Link in level 2</a></li>
-                        <li><a href="#">Link in level 2</a></li>
-                    </ul>
-                </li>
             </ul>
         </section>
     </aside>
@@ -74,8 +64,8 @@ include_once '../process/connector.php';
                 <small>Teacher</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">Here</li>
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">list question</li>
             </ol>
         </section>
 
@@ -91,31 +81,22 @@ include_once '../process/connector.php';
                     <div class="row">
                         <div class="col-md-12">
                             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="form-inline pull-left">
-                                <select name="category" class="form-control input-lg">
+                                <select name="category" class="form-control input-lg" id="category-dropdown" style="width: 250px;">
+                                    <option value="" selected="selected">Select Category</option>
                                     <?php
                                     $sql = "SELECT CAT_ID, NAME FROM TB_CATEGORY";
                                     $result = mysqli_query($link, $sql);
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         ?>
-                                        <option value="<?= $row['CAT_ID']; ?>" <?php if ($category_id === $row['cat_id']) echo "selected"; ?>>
+                                        <option value="<?= $row['CAT_ID']; ?>">
                                             <?= $row['NAME']; ?>
                                         </option>
                                         <?php
                                     }
                                     ?>
                                 </select>
-                                <select name="subject" class="form-control input-lg">
-                                    <?php
-                                    $sql = "SELECT SUB_ID, TITLE FROM TB_SUBJECTS WHERE CAT_ID = 5";
-                                    $result = mysqli_query($link, $sql);
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        ?>
-                                        <option value="<?= $row['SUB_ID']; ?>" <?php if ($category_id === $row['SUB_ID']) echo "selected"; ?>>
-                                            <?= $row['TITLE']; ?>
-                                        </option>
-                                        <?php
-                                    }
-                                    ?>
+                                <select name="subject" class="form-control input-lg" id="subject-dropdown" style="width: 250px;" disabled>
+                                    <option value="">Select Subject</option>
                                 </select>
                                 <button type="submit" class="btn btn-lg bg-gray-active"><i class="fa fa-search"></i>&nbsp; SEARCH</button>
                             </form>
@@ -239,7 +220,7 @@ include_once '../process/connector.php';
                                 <tr>
                                     <td colspan="8" class="text-center">
                                         <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
-                                            Not found your exam [<a href="choose_category.php" class="text-green">Get
+                                            Not found the question [<a href="choose_category.php" class="text-green">Get
                                                 starting</a>]
                                         </p>
                                     </td>
@@ -274,6 +255,25 @@ include_once '../process/connector.php';
         //Initialize Select2 Elements
         $('.select2').select2()
     })
+</script>
+<script>
+    $(document).ready(function() {
+        $('#category-dropdown').on('change', function() {
+            let category_id = this.value;
+            $.ajax({
+                url: "subject-by-category.php",
+                type: "POST",
+                data: {
+                    category_id: category_id
+                },
+                cache: false,
+                success: function(result){
+                    $("#subject-dropdown").prop('disabled', false)
+                    $("#subject-dropdown").html(result);
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
