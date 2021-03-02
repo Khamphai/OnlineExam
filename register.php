@@ -3,6 +3,7 @@ session_start();
 session_unset();
 include_once 'process/connector.php';
 $msg = "";
+$status = false;
 $full_name = @$_POST['full_name'];
 $terms = @$_POST['terms'];
 $email = @$_POST['email'];
@@ -17,10 +18,10 @@ if (isset($_POST['submit'])) {
         $em = mysqli_real_escape_string($link, $email);
         $ps = mysqli_real_escape_string($link, $passwd);
         $fn = mysqli_real_escape_string($link, $full_name);
-        $sql = "INSERT INTO `tb_users` (`user_id`, `email`, `password`, `fullname`, `role`, `status`) 
+        $sql = "INSERT INTO `tb_users` (`user_id`, `email`, `password`, `fullname`, `role`, `status`)
             VALUES (NULL, '" . $em . "', '" . $ps . "', '" . $fn . "', 'student', 1)";
         if (mysqli_query($link, $sql)) {
-            header("Location: login.php");
+            $status = true;
         } else {
             $msg = "Error: " . $sql . "<br>" . mysqli_error($link);
         }
@@ -99,11 +100,39 @@ if (isset($_POST['submit'])) {
 <script src="assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="assets/plugins/iCheck/icheck.min.js"></script>
+<?php
+if ($status) {
+?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#modal-success-register").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-success-register" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-green" style="font-size: 70px">
+                        <i class="fa fa-check-circle"></i>
+                    </p>
+                    <h3 class="text-info">Congrats! Register Successfully</h3>
+                    <br/><br/>
+                    <a href="login.php" class="btn bg-gray-active">
+                        Go to Login <i class="fa fa-chevron-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+}
+?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.loading').show();
         $('.overlay').show();
-        setTimeout("callback()", 600);
+        setTimeout("callback()", 300);
     });
 
     function callback() {
