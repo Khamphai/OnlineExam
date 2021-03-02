@@ -1,3 +1,7 @@
+<?php
+session_start();
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,80 +14,12 @@
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
 
-    <header class="main-header">
-
-        <a href="index.php" class="logo">
-            <span class="logo-mini"><b>E</b>xam</span>
-            <span class="logo-lg"><b>Exam</b> Online</span>
-        </a>
-
-        <nav class="navbar navbar-static-top" role="navigation">
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
-                            <li>
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="footer"><a href="#">View all</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="../assets/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Khamphai KNVS</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="user-header">
-                                <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                                <p>
-                                    Khamphai KNVS - SWG9
-                                    <small>Member since Feb. 2021</small>
-                                </p>
-                            </li>
-                            <li class="user-body">
-                                <div class="row">
-
-                                </div>
-                            </li>
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Log off</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    <?php include_once 'header.php'; ?>
     <aside class="main-sidebar">
 
         <section class="sidebar">

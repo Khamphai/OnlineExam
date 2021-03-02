@@ -1,3 +1,7 @@
+<?php
+session_start();
+include_once '../process/connector.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,80 +14,12 @@
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
 
-    <header class="main-header">
-
-        <a href="index.php" class="logo">
-            <span class="logo-mini"><b>E</b>xam</span>
-            <span class="logo-lg"><b>Exam</b> Online</span>
-        </a>
-
-        <nav class="navbar navbar-static-top" role="navigation">
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
-                            <li>
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="footer"><a href="#">View all</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="../assets/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Khamphai KNVS</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="user-header">
-                                <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                                <p>
-                                    Khamphai KNVS - SWG9
-                                    <small>Member since Feb. 2021</small>
-                                </p>
-                            </li>
-                            <li class="user-body">
-                                <div class="row">
-
-                                </div>
-                            </li>
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Log off</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    <?php include_once 'header.php'; ?>
     <aside class="main-sidebar">
 
         <section class="sidebar">
@@ -93,7 +29,7 @@
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?=htmlspecialchars($_SESSION['full_name'])?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -133,96 +69,215 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Home
+                Monitor
                 <small>Teacher</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">Here</li>
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">monitor score test</li>
             </ol>
         </section>
 
         <!-- Main content -->
-        <section class="content container-fluid">
-
-            <!--------------------------
-              | Your Page Content Here |
-              -------------------------->
+        <section class="content">
 
             <div class="row">
-                <div class="col-md-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Bordered Table</h3>
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>150</h3>
+
+                            <p>New Orders</p>
                         </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th style="width: 10px">#</th>
-                                    <th>Task</th>
-                                    <th>Progress</th>
-                                    <th style="width: 40px">Label</th>
-                                </tr>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>Update software</td>
-                                    <td>
-                                        <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge bg-red">55%</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Clean database</td>
-                                    <td>
-                                        <div class="progress progress-xs">
-                                            <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge bg-yellow">70%</span></td>
-                                </tr>
-                                <tr>
-                                    <td>3.</td>
-                                    <td>Cron job running</td>
-                                    <td>
-                                        <div class="progress progress-xs progress-striped active">
-                                            <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge bg-light-blue">30%</span></td>
-                                </tr>
-                                <tr>
-                                    <td>4.</td>
-                                    <td>Fix and squish bugs</td>
-                                    <td>
-                                        <div class="progress progress-xs progress-striped active">
-                                            <div class="progress-bar progress-bar-success" style="width: 90%"></div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge bg-green">90%</span></td>
-                                </tr>
-                            </table>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
                         </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer clearfix">
-                            <ul class="pagination pagination-sm no-margin pull-right">
-                                <li><a href="#">&laquo;</a></li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">&raquo;</a></li>
-                            </ul>
-                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                    <!-- /.box -->
                 </div>
-                <!-- /.col -->
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                            <p>Bounce Rate</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>44</h3>
+
+                            <p>User Registrations</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>65</h3>
+
+                            <p>Unique Visitors</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
             </div>
 
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Review score Examination</h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Student</th>
+                                <th>Level / Time</th>
+                                <th>Pass %</th>
+                                <th>Score</th>
+                                <th>Status</th>
+                                <th>View</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            $sql = "SELECT U.USER_ID, U.FULLNAME AS FULL_NAME, A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
+                                           B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT,
+                                           C.NAME AS CAT_NAME FROM TB_TEST_RESULT A
+                                               INNER JOIN TB_USERS U ON (A.USER_ID=U.USER_ID)
+                                               INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
+                                               INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
+                                    ORDER BY A.TEST_ID DESC";
+                            $result = mysqli_query($link, $sql);
+                            $no = 0;
+                            $count = mysqli_num_rows($result);
+                            if ($count > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $test_id = $row['TEST_ID'];
+                                    $sql_score = "SELECT SC_CHOICE, SC_ANSWER, SC_JUDGE FROM TB_SCORE where TEST_ID = $test_id";
+                                    $result_score = mysqli_query($link, $sql_score);
+                                    $count_score = mysqli_num_rows($result_score);
+                                    $percent = 0;
+                                    if ($count_score > 0) {
+                                        while ($row_score = mysqli_fetch_assoc($result_score)) {
+                                            if ($row_score['SC_JUDGE'] === 'Good') {
+                                                $percent += 100;
+                                            }
+                                        }
+                                        $pass_percent = (int) $row['PASS_PERCENT'];
+                                        $mark_percent = round($percent/$count_score);
+                                        if ($mark_percent >= $pass_percent) {
+                                            $judge = "<span class='text-green text-bold'>PASSED</span>";
+                                        }else{
+                                            $judge = "<span class='text-red text-bold'>FAILED</span>";
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?= @++$no; ?>
+                                            </td>
+                                            <td>
+                                                <?= htmlspecialchars($row['SUB_TITLE']) ?>
+                                                <br/>
+                                                <span class="text-center badge bg-gray-active">
+                                                <?= htmlspecialchars($row['CAT_NAME']) ?>
+                                            </span>
+                                            </td>
+                                            <td>
+                                            <span class="text-center badge bg-blue-active">
+                                                Test Date: <?= htmlspecialchars($row['TEST_DATE']) ?>
+                                            </span>
+                                                <br/>
+                                                <span class="text-center badge bg-blue-active">
+                                                Use Time: <?= htmlspecialchars(gmdate("H:i:s", $row['TEST_MINUTE'])) ?>
+                                            </span>
+                                            </td>
+                                            <td><?=htmlspecialchars($row['FULL_NAME'])?></td>
+                                            <td>
+                                                <?php
+                                                if ($row['LEVEL'] == 1) {
+                                                    echo "<span class=\"text-center badge bg-green\">Easiest</span>";
+                                                } else if ($row['level'] == 2) {
+                                                    echo "<span class=\"text-center badge bg-blue\">Normal</span>";
+                                                } else if ($row['level'] == 3) {
+                                                    echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
+                                                } else {
+                                                    echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
+                                                }
+                                                ?>
+                                                <br/>
+                                                <span class="text-center badge bg-teal-active">
+                                        <?= htmlspecialchars($row['SUB_TIME']) ?> Minute
+                                    </span>
+                                            </td>
+                                            <td>
+                                                <span class='text-green text-bold'><?= htmlspecialchars($row['PASS_PERCENT']) ?> %</span>
+                                            </td>
+                                            <td>
+                                                <span class='text-blue text-bold'><?= $mark_percent ?>%</span>
+                                            </td>
+                                            <td>
+                                                <?=$judge;?>
+                                            </td>
+                                            <td><a href="monitor_detail.php?vTestID=<?=$test_id?>&vUserID=<?=$row['USER_ID']?>" class="btn btn-sm bg-gray-active">GO &nbsp; <i
+                                                            class="fa fa-bars"></i></a></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                }
+                            } else {
+                                ?>
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
+                                            Not found the exam result
+                                        </p>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            mysqli_close($link);
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+            </div>
+            <!-- /.box -->
+
         </section>
+        <!-- /.content -->
     </div>
 
     <footer class="main-footer">

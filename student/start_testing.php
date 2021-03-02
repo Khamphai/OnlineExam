@@ -45,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // store count last time
     $_SESSION['time'] = (int) $time_count;
 
-    if ($_POST['Clicked'] == 'prev'){
+    if (empty($_POST['CLICKED'])) {
+        $msg = "Please wait until initialized";
+    } else if ($_POST['CLICKED'] === 'prev'){
         $index -= 1;
     }else if (empty($ans_sel)) {
         $msg = "Please choose the answer";
@@ -60,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ans = $ans_sel;
         }
 
-        if ($_POST['Clicked'] == 'next') {
+        if ($_POST['CLICKED'] === 'next') {
             if (!empty($_SESSION['answers'][$index]['ans_sel'])) {
                 $_SESSION['answers'][$index]['ans_sel'] = $ans;
             }else{
@@ -68,16 +70,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 array_push($_SESSION['answers'], $answer);
             }
             $index += 1;
-        } else if ($_POST['Clicked'] == 'submit'){
+        } else if ($_POST['CLICKED'] === 'smt'){
             if (!empty($_SESSION['answers'][$index]['ans_sel'])) {
                 $_SESSION['answers'][$index]['ans_sel'] = $ans;
             }else{
                 $answer = ["ans_col" => $ans_col, "q_id" => $qId, "ans_sel" => $ans];
                 array_push($_SESSION['answers'], $answer);
             }
-            $_SESSION['action'] = "submit";
-            // TODO :: Process submit answer
-            header("Location: ../process/process_score.php");
+            if ($_SESSION['q_count'] != count($_SESSION['answers'])) {
+                $msg = "Invalid answer some question!";
+            }else{
+                $_SESSION['action'] = "submit";
+                // TODO :: Process submit answer
+                header("Location: ../process/process_score.php");
+            }
+        }else{
+            $msg = "Please wait until initialized";
         }
     }
 }
@@ -113,6 +121,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
     <link rel="stylesheet" href="../assets/plugins/iCheck/all.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -129,7 +138,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?=htmlspecialchars($_SESSION['full_name'])?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -168,7 +177,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
         </section>
 
         <!-- Main content -->
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" id="testing">
             <section class="content container-fluid">
                 <div class="row">
                     <div class="col-md-4">
@@ -213,7 +222,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
                     <?php if ($count > 0) { ?>
                     <div class="box-header with-border">
                         <h4 class="box-title">
-                            <b>[Question <?=$index + 1?> of <?=count($question)?>]</b> <br/><br/>
+                            <b>[Question <?=$index + 1?> of <?=$_SESSION['q_count']?>]</b> <br/><br/>
                             <?=$question[$index]['q_title'];?>
                         </h4>
                         <div class="box-tools pull-right">
@@ -251,9 +260,9 @@ header( "refresh:$time_on; url=../process/process_score.php");
                                         <td class="text-center" style="width: 50px;">
                                             <label>
                                                 <?php if ($question[$index]['q_answer_type'] == 1) { ?>
-                                                    <input type="radio" name="ans_sel" class="flat-red" value="1" <?php if (strpos($_SESSION['answers'][$index]['ans_sel'], '1') !== false ) echo 'checked'; ?>>
+                                                    <input type="radio" name="ans_sel" class="flat-red" onclick="onClickHandler()" value="1" <?php if (strpos($_SESSION['answers'][$index]['ans_sel'], '1') !== false ) echo 'checked'; ?>>
                                                 <?php }else{ ?>
-                                                    <input type="checkbox" name="ans_sel[]" class="flat-red" value="1" <?php if (strpos($_SESSION['answers'][$index]['ans_sel'], '1') !== false ) echo 'checked'; ?>>
+                                                    <input type="checkbox" name="ans_sel[]" class="flat-red" onclick="onClickHandler()" value="1" <?php if (strpos($_SESSION['answers'][$index]['ans_sel'], '1') !== false ) echo 'checked'; ?>>
                                                 <?php } ?>
                                             </label>
                                         </td>
@@ -338,14 +347,14 @@ header( "refresh:$time_on; url=../process/process_score.php");
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="hidden" id="Clicked" name="Clicked" value=""/>
+                                <input type="hidden" id="CLICKED" name="CLICKED" value=""/>
                                 <?php if ($index != 0) { ?>
                                     <button type="submit" class="btn bg-orange pull-left clickBtn" id="prev"><i class="fa fa-chevron-circle-left"></i>&nbsp; Previous</button>
                                 <?php } ?>
-                                <?php if ($index + 1 != count($question)) { ?>
+                                <?php if ($index + 1 != $_SESSION['q_count']) { ?>
                                     <button type="submit" class="btn bg-blue pull-right clickBtn" id="next">Next &nbsp;<i class="fa fa-chevron-circle-right"></i></button>
-                                <?php }else{ ?>
-                                    <button type="submit" class="btn bg-green pull-right clickBtn" id="submit">Submit &nbsp;<i class="fa fa-check-circle"></i></button>
+                                <?php } else { ?>
+                                    <button type="submit" class="btn bg-green pull-right clickBtn" id="smt">Submit &nbsp;<i class="fa fa-check-circle"></i></button>
                                 <?php } ?>
                             </div>
                         </div>
@@ -355,6 +364,8 @@ header( "refresh:$time_on; url=../process/process_score.php");
 
             </section>
         </form>
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -367,6 +378,17 @@ header( "refresh:$time_on; url=../process/process_score.php");
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 800);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 <script>
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
@@ -378,18 +400,23 @@ header( "refresh:$time_on; url=../process/process_score.php");
             $("#success-alert").slideUp(500);
         });
     });
-
-    $(document).ready(function()
-    {
+    $(function() {
         $('.clickBtn').click(function()
         {
             let ButtonID = $(this).attr('id');
-            $('#Clicked').val(ButtonID);
+            $('#CLICKED').val(ButtonID);
         });
     });
 </script>
+<!--View Loading-->
 <script type="text/javascript">
-    (function () {
+    $(document).on('submit', 'form#testing', function (event) {
+        $('.loading').show();
+        $('.overlay').show();
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
         let timeLeft = <?php echo $time_on; ?>, cinterval;
         let timeDec = function (){
             timeLeft--;
@@ -400,7 +427,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
             }
         };
         cinterval = setInterval(timeDec, 1000);
-    })();
+    });
 </script>
 </body>
 </html>

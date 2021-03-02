@@ -33,7 +33,7 @@ if (mysqli_query($link, $sql)) {
     echo "Error: " . $sql . "<br>" . mysqli_error($link);
 }
 // TODO :: Loop Insert to tb_score
-$sql = "INSERT INTO `tb_score` (`sc_id`, `sc_choice`, `sc_answer`, `sc_judge`, `test_id`, `q_id`) VALUES ";
+$sql = "INSERT INTO `tb_score` (`sc_choice`, `sc_answer`, `sc_judge`, `test_id`, `q_id`) VALUES ";
 $counts = sizeof($answers);
 foreach ($answers as $key => $value){
     $sc_choice = $answers[$key]['ans_sel'];
@@ -45,7 +45,7 @@ foreach ($answers as $key => $value){
         $sc_judge = "N.G";
     }
 
-    $value = "(NULL, '$sc_choice', '$sc_answer', '$sc_judge', $last_test_id, $q_id)";
+    $value = "('$sc_choice', '$sc_answer', '$sc_judge', $last_test_id, $q_id)";
     $sql .= $counts > 1 ? $value . "," : $value;
     $counts -= 1;
 }

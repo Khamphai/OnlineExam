@@ -14,6 +14,7 @@ include_once '../process/connector.php';
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -67,69 +68,6 @@ include_once '../process/connector.php';
 
         <!-- Main content -->
         <section class="content">
-
-            <div class="row">
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>150</h3>
-
-                            <p>New Orders</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                            <p>Bounce Rate</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3>44</h3>
-
-                            <p>User Registrations</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3>65</h3>
-
-                            <p>Unique Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-            </div>
 
             <div class="box box-success">
                 <div class="box-header with-border">
@@ -187,58 +125,58 @@ include_once '../process/connector.php';
                                         }else{
                                             $judge = "<span class='text-red text-bold'>FAILED</span>";
                                         }
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <?= @++$no; ?>
-                                        </td>
-                                        <td>
-                                            <?= htmlspecialchars($row['SUB_TITLE']) ?>
-                                            <br/>
-                                            <span class="text-center badge bg-gray-active">
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?= @++$no; ?>
+                                            </td>
+                                            <td>
+                                                <?= htmlspecialchars($row['SUB_TITLE']) ?>
+                                                <br/>
+                                                <span class="text-center badge bg-gray-active">
                                                 <?= htmlspecialchars($row['CAT_NAME']) ?>
                                             </span>
-                                        </td>
-                                        <td>
+                                            </td>
+                                            <td>
                                             <span class="text-center badge bg-blue-active">
                                                 Test Date: <?= htmlspecialchars($row['TEST_DATE']) ?>
                                             </span>
-                                            <br/>
-                                            <span class="text-center badge bg-blue-active">
+                                                <br/>
+                                                <span class="text-center badge bg-blue-active">
                                                 Use Time: <?= htmlspecialchars(gmdate("H:i:s", $row['TEST_MINUTE'])) ?>
                                             </span>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            if ($row['LEVEL'] == 1) {
-                                                echo "<span class=\"text-center badge bg-green\">Easiest</span>";
-                                            } else if ($row['level'] == 2) {
-                                                echo "<span class=\"text-center badge bg-blue\">Normal</span>";
-                                            } else if ($row['level'] == 3) {
-                                                echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
-                                            } else {
-                                                echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
-                                            }
-                                            ?>
-                                            <br/>
-                                            <span class="text-center badge bg-teal-active">
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if ($row['LEVEL'] == 1) {
+                                                    echo "<span class=\"text-center badge bg-green\">Easiest</span>";
+                                                } else if ($row['level'] == 2) {
+                                                    echo "<span class=\"text-center badge bg-blue\">Normal</span>";
+                                                } else if ($row['level'] == 3) {
+                                                    echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
+                                                } else {
+                                                    echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
+                                                }
+                                                ?>
+                                                <br/>
+                                                <span class="text-center badge bg-teal-active">
                                         <?= htmlspecialchars($row['SUB_TIME']) ?> Minute
                                     </span>
-                                        </td>
-                                        <td>
-                                            <span class='text-green text-bold'><?= htmlspecialchars($row['PASS_PERCENT']) ?> %</span>
-                                        </td>
-                                        <td>
-                                            <span class='text-blue text-bold'><?= $mark_percent ?>%</span>
-                                        </td>
-                                        <td>
-                                            <?=$judge;?>
-                                        </td>
-                                        <td><a href="view_detail.php?vTestID=<?=$test_id?>" class="btn btn-sm bg-gray-active">GO &nbsp; <i
-                                                        class="fa fa-bars"></i></a></td>
-                                    </tr>
-                                    <?php
-                                }
+                                            </td>
+                                            <td>
+                                                <span class='text-green text-bold'><?= htmlspecialchars($row['PASS_PERCENT']) ?> %</span>
+                                            </td>
+                                            <td>
+                                                <span class='text-blue text-bold'><?= $mark_percent ?>%</span>
+                                            </td>
+                                            <td>
+                                                <?=$judge;?>
+                                            </td>
+                                            <td><a href="view_detail.php?vTestID=<?=$test_id?>" class="btn btn-sm bg-gray-active">GO &nbsp; <i
+                                                            class="fa fa-bars"></i></a></td>
+                                        </tr>
+                                        <?php
+                                    }
                                 }
                             } else {
                                 ?>
@@ -264,6 +202,8 @@ include_once '../process/connector.php';
 
         </section>
         <!-- /.content -->
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -275,5 +215,16 @@ include_once '../process/connector.php';
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 800);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 </body>
 </html>

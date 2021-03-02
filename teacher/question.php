@@ -1,8 +1,17 @@
 <?php
 session_start();
 include_once '../process/connector.php';
-$category_id = @$_GET['category'];
-$subject_id = @$_GET['subject'];
+$category_id = @$_POST['category'];
+$subject_id = @$_POST['subject'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_POST['Clicked'] == 'add_qt'){
+        $_SESSION['cat_id'] = $category_id;
+        $_SESSION['sub_id'] = $subject_id;
+        header("Location: add_question.php");
+    }else if ($_POST['Clicked'] == 'search') {
+        echo "Search";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,27 +89,29 @@ $subject_id = @$_GET['subject'];
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="form-inline pull-left">
-                                <select name="category" class="form-control input-lg" id="category-dropdown" style="width: 250px;">
+                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="form-inline">
+                                <select name="category" class="form-control input-lg pull-left" style="margin-right: 5px" id="category-dropdown" style="width: 250px;">
                                     <option value="" selected="selected">Select Category</option>
                                     <?php
                                     $sql = "SELECT CAT_ID, NAME FROM TB_CATEGORY";
                                     $result = mysqli_query($link, $sql);
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         ?>
-                                        <option value="<?= $row['CAT_ID']; ?>">
+                                        <option value="<?= $row['CAT_ID']; ?>" <?php if ($category_id == $row['CAT_ID']) echo "selected"; ?>>
                                             <?= $row['NAME']; ?>
                                         </option>
                                         <?php
                                     }
                                     ?>
                                 </select>
-                                <select name="subject" class="form-control input-lg" id="subject-dropdown" style="width: 250px;" disabled>
+                                &nbsp;
+                                <select name="subject" class="form-control input-lg pull-left" id="subject-dropdown" style="width: 250px;" disabled>
                                     <option value="">Select Subject</option>
                                 </select>
-                                <button type="submit" class="btn btn-lg bg-gray-active"><i class="fa fa-search"></i>&nbsp; SEARCH</button>
+                                <input type="hidden" id="Clicked" name="Clicked" value=""/>
+                                <button type="submit" class="btn btn-lg bg-gray-active pull-right clickBtn"  id="search" disabled><i class="fa fa-search"></i>&nbsp; SEARCH</button>
+                                <button type="submit" class="btn btn-lg bg-blue pull-right clickBtn" style="margin-right: 5px" id="add_qt" disabled><i class="fa fa-plus-circle"></i>&nbsp; ADD QUESTION</button>
                             </form>
-                            <a href="index.php" class="btn btn-lg bg-blue pull-right"><i class="fa fa-search"></i>&nbsp; ADD QUESTION</a>
                         </div>
                     </div>
                 </div>
@@ -220,8 +231,7 @@ $subject_id = @$_GET['subject'];
                                 <tr>
                                     <td colspan="8" class="text-center">
                                         <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
-                                            Not found the question [<a href="choose_category.php" class="text-green">Get
-                                                starting</a>]
+                                            Not found the question
                                         </p>
                                     </td>
                                 </tr>
@@ -269,9 +279,29 @@ $subject_id = @$_GET['subject'];
                 cache: false,
                 success: function(result){
                     $("#subject-dropdown").prop('disabled', false)
+                    $("#search").prop('disabled', true)
+                    $("#add_qt").prop('disabled', true)
                     $("#subject-dropdown").html(result);
                 }
             });
+        });
+        $('#subject-dropdown').on('change', function() {
+            let subject_id = this.value;
+            if (subject_id !== "") {
+                $("#search").prop('disabled', false)
+                $("#add_qt").prop('disabled', false)
+            }else{
+                $("#search").prop('disabled', true)
+                $("#add_qt").prop('disabled', true)
+            }
+        });
+    });
+    $(document).ready(function()
+    {
+        $('.clickBtn').click(function()
+        {
+            let ButtonID = $(this).attr('id');
+            $('#Clicked').val(ButtonID);
         });
     });
 </script>

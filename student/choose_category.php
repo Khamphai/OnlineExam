@@ -20,6 +20,7 @@ if (!empty($cat_id)) {
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
@@ -114,6 +115,8 @@ if (!empty($cat_id)) {
             </div>
             <!-- /.row -->
         </section>
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -125,5 +128,16 @@ if (!empty($cat_id)) {
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 </body>
 </html>

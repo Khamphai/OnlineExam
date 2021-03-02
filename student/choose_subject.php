@@ -36,6 +36,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../assets/plugins/iCheck/all.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
@@ -211,6 +212,8 @@ if (isset($_POST['submit'])) {
             <?php } ?>
         </section>
         </form>
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -223,6 +226,17 @@ if (isset($_POST['submit'])) {
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 <script>
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({

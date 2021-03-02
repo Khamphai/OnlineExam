@@ -1,17 +1,18 @@
 <?php
 session_start();
 $test_id = @$_GET['vTestID'];
-$user_id = @$_SESSION['user_id'];
+$user_id = @$_GET['vUserID'];
 if (empty($test_id) || empty($user_id)) {
     header('Location: review.php');
 }
 include_once '../process/connector.php';
 
 // Load info has relation
-$sql = "SELECT A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
+$sql = "SELECT U.USER_ID, U.FULLNAME AS FULL_NAME, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
         B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT, C.NAME AS CAT_NAME, C.DESCRIPTION AS CAT_DESC FROM TB_TEST_RESULT A
-           INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
-           INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
+            INNER JOIN TB_USERS U ON (A.USER_ID=U.USER_ID)
+            INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
+            INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
         WHERE A.TEST_ID = $test_id AND A.USER_ID = $user_id";
 $result = mysqli_query($link, $sql);
 $data = mysqli_fetch_assoc($result);
@@ -24,7 +25,7 @@ if($count_main != 1) header('Location: review.php');
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Exam | View Detail</title>
+    <title>Exam | Monitor Detail</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="../assets/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">
@@ -32,7 +33,6 @@ if($count_main != 1) header('Location: review.php');
     <link rel="stylesheet" href="../assets/plugins/iCheck/all.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
-    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -75,14 +75,14 @@ if($count_main != 1) header('Location: review.php');
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Review
-                <small>Test System</small>
+                Monitor
+                <small>Teacher</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">View detail</li>
+                <li class="active">monitor detail</li>
             </ol>
-            <a href="review.php" class="btn btn-sm bg-orange-active" style="margin-top: 10px;">
+            <a href="index.php" class="btn btn-sm bg-orange-active" style="margin-top: 10px;">
                 <i class="fa fa-chevron-circle-left"></i> Back
             </a>
         </section>
@@ -101,9 +101,9 @@ if($count_main != 1) header('Location: review.php');
                                 <span class="text-center badge bg-aqua-active">
                                     <?=htmlspecialchars('User')?>
                                 </span>
-                                <?= htmlspecialchars($_SESSION['user_id']) ?>
+                                <?= htmlspecialchars($data['USER_ID']) ?>
                                 :
-                                <?= htmlspecialchars($_SESSION['full_name']) ?>
+                                <?= htmlspecialchars($data['FULL_NAME']) ?>
                             </span>
                             <span class="info-box-more">
                                 <span class="text-center badge bg-gray-active">
@@ -378,15 +378,13 @@ if($count_main != 1) header('Location: review.php');
                             }
                             ?>
                             <span class="pull-left" style="font-size: xx-large">Mark percent : <b><?= $mark_percent ?>%</b> [<?= $judge ?>]</span>
-                            <a href="review.php" class="btn btn-lg bg-green pull-right"><i class="fa fa-check-circle"></i>&nbsp; Finished</a>
+                            <a href="index.php" class="btn btn-lg bg-green pull-right"><i class="fa fa-check-circle"></i>&nbsp; Finished</a>
                         </div>
                     </div>
                 </div>
             </div>
 
         </section>
-
-        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -399,17 +397,6 @@ if($count_main != 1) header('Location: review.php');
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.loading').show();
-        $('.overlay').show();
-        setTimeout("callback()", 600);
-    });
-    function callback() {
-        $('.loading').hide();
-        $('.overlay').hide();
-    }
-</script>
 <script>
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
