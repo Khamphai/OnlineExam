@@ -3,13 +3,14 @@ session_start();
 include_once '../process/connector.php';
 $category_id = @$_POST['category'];
 $subject_id = @$_POST['subject'];
+$search = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['Clicked'] == 'add_qt'){
+    if ($_POST['CLICKED'] == 'add_qt'){
         $_SESSION['cat_id'] = $category_id;
         $_SESSION['sub_id'] = $subject_id;
         header("Location: add_question.php");
-    }else if ($_POST['Clicked'] == 'search') {
-        echo "Search";
+    }else if ($_POST['CLICKED'] == 'search') {
+        $search = true;
     }
 }
 ?>
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/plugins/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
@@ -97,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     $result = mysqli_query($link, $sql);
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         ?>
-                                        <option value="<?= $row['CAT_ID']; ?>" <?php if ($category_id == $row['CAT_ID']) echo "selected"; ?>>
+                                        <option value="<?= $row['CAT_ID']; ?>">
                                             <?= $row['NAME']; ?>
                                         </option>
                                         <?php
@@ -108,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select name="subject" class="form-control input-lg pull-left" id="subject-dropdown" style="width: 250px;" disabled>
                                     <option value="">Select Subject</option>
                                 </select>
-                                <input type="hidden" id="Clicked" name="Clicked" value=""/>
+                                <input type="hidden" id="CLICKED" name="CLICKED" value=""/>
                                 <button type="submit" class="btn btn-lg bg-gray-active pull-right clickBtn"  id="search" disabled><i class="fa fa-search"></i>&nbsp; SEARCH</button>
                                 <button type="submit" class="btn btn-lg bg-blue pull-right clickBtn" style="margin-right: 5px" id="add_qt" disabled><i class="fa fa-plus-circle"></i>&nbsp; ADD QUESTION</button>
                             </form>
@@ -132,102 +134,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Subject</th>
-                                <th>Date</th>
-                                <th>Level / Time</th>
-                                <th>Pass %</th>
-                                <th>Score</th>
-                                <th>Status</th>
+                                <th>Question</th>
                                 <th>View</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            $user_id = $_SESSION['user_id'];
-                            $sql = "SELECT A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
-                                           B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT,
-                                           C.NAME AS CAT_NAME FROM TB_TEST_RESULT A
-                                               INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
-                                               INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
-                                    WHERE A.USER_ID = $user_id ORDER BY A.TEST_ID DESC";
-                            $result = mysqli_query($link, $sql);
-                            $no = 0;
-                            $count = mysqli_num_rows($result);
-                            if ($count > 0) {
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    $test_id = $row['TEST_ID'];
-                                    $sql_score = "SELECT SC_CHOICE, SC_ANSWER, SC_JUDGE FROM TB_SCORE where TEST_ID = $test_id";
-                                    $result_score = mysqli_query($link, $sql_score);
-                                    $count_score = mysqli_num_rows($result_score);
-                                    $percent = 0;
-                                    if ($count_score > 0) {
-                                        while ($row_score = mysqli_fetch_assoc($result_score)) {
-                                            if ($row_score['SC_JUDGE'] === 'Good') {
-                                                $percent += 100;
-                                            }
-                                        }
-                                        $pass_percent = (int) $row['PASS_PERCENT'];
-                                        $mark_percent = round($percent/$count_score);
-                                        if ($mark_percent >= $pass_percent) {
-                                            $judge = "<span class='text-green text-bold'>PASSED</span>";
-                                        }else{
-                                            $judge = "<span class='text-red text-bold'>FAILED</span>";
-                                        }
-                                        ?>
+                            if ($search) {
+                                $sql = "SELECT A.*, B.*, C.* FROM TB_QUESTIONS A
+                                            INNER JOIN TB_SUBJECTS B ON A.SUB_ID = B.SUB_ID
+                                            INNER JOIN TB_CATEGORY C ON B.CAT_ID = C.CAT_ID
+                                        WHERE B.SUB_ID = $subject_id AND C.CAT_ID = $category_id";
+                                $result = mysqli_query($link, $sql);
+                                $count = mysqli_num_rows($result);
+                                $no = 0;
+                                if ($count > 0) {
+                                    while ($row = mysqli_fetch_assoc($result)) { ?>
                                         <tr>
                                             <td>
                                                 <?= @++$no; ?>
                                             </td>
                                             <td>
-                                                <?= htmlspecialchars($row['SUB_TITLE']) ?>
-                                                <br/>
-                                                <span class="text-center badge bg-gray-active">
-                                                <?= htmlspecialchars($row['CAT_NAME']) ?>
-                                            </span>
+                                                <?= htmlspecialchars($row['q_title']) ?>
                                             </td>
                                             <td>
-                                            <span class="text-center badge bg-blue-active">
-                                                Test Date: <?= htmlspecialchars($row['TEST_DATE']) ?>
-                                            </span>
-                                                <br/>
-                                                <span class="text-center badge bg-blue-active">
-                                                Use Time: <?= htmlspecialchars(gmdate("H:i:s", $row['TEST_MINUTE'])) ?>
-                                            </span>
+                                                <a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i class="fa fa-bars"></i></a>
                                             </td>
-                                            <td>
-                                                <?php
-                                                if ($row['LEVEL'] == 1) {
-                                                    echo "<span class=\"text-center badge bg-green\">Easiest</span>";
-                                                } else if ($row['level'] == 2) {
-                                                    echo "<span class=\"text-center badge bg-blue\">Normal</span>";
-                                                } else if ($row['level'] == 3) {
-                                                    echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
-                                                } else {
-                                                    echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
-                                                }
-                                                ?>
-                                                <br/>
-                                                <span class="text-center badge bg-teal-active">
-                                        <?= htmlspecialchars($row['SUB_TIME']) ?> Minute
-                                    </span>
-                                            </td>
-                                            <td>
-                                                <span class='text-green text-bold'><?= htmlspecialchars($row['PASS_PERCENT']) ?> %</span>
-                                            </td>
-                                            <td>
-                                                <span class='text-blue text-bold'><?= $mark_percent ?>%</span>
-                                            </td>
-                                            <td>
-                                                <?=$judge;?>
-                                            </td>
-                                            <td><a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i
-                                                            class="fa fa-bars"></i></a></td>
                                         </tr>
-                                        <?php
-                                    }
-                                }
+                                <?php }
                             } else {
-                                ?>
+                            ?>
                                 <tr>
                                     <td colspan="8" class="text-center">
                                         <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
@@ -235,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </p>
                                     </td>
                                 </tr>
-                                <?php
+                            <?php }
                             }
                             mysqli_close($link);
                             ?>
@@ -248,6 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- /.box -->
 
         </section>
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -260,6 +198,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/plugins/select2/dist/js/select2.full.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 <script>
     $(function () {
         //Initialize Select2 Elements
@@ -301,8 +250,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $('.clickBtn').click(function()
         {
             let ButtonID = $(this).attr('id');
-            $('#Clicked').val(ButtonID);
+            $('#CLICKED').val(ButtonID);
         });
+    });
+</script>
+<!--View Loading-->
+<script type="text/javascript">
+    $(document).on('submit', 'form#question', function (event) {
+        $('.loading').show();
+        $('.overlay').show();
     });
 </script>
 </body>

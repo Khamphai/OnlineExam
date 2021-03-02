@@ -33,6 +33,7 @@ if($count_main != 1) header('Location: review.php');
     <link rel="stylesheet" href="../assets/plugins/iCheck/all.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -66,8 +67,10 @@ if($count_main != 1) header('Location: review.php');
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li><a href="index.php"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-bar-chart"></i> <span>Monitor</span></a></li>
+                <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
+                <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
+                <li><a href="question.php"><i class="fa fa-link"></i> <span>Question</span></a></li>
             </ul>
         </section>
     </aside>
@@ -385,6 +388,8 @@ if($count_main != 1) header('Location: review.php');
             </div>
 
         </section>
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -397,6 +402,17 @@ if($count_main != 1) header('Location: review.php');
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 <script>
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({

@@ -14,6 +14,7 @@ include_once '../process/connector.php';
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
@@ -50,18 +51,6 @@ include_once '../process/connector.php';
                 <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
                 <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
                 <li><a href="question.php"><i class="fa fa-link"></i> <span>Question</span></a></li>
-                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#">Link in level 2</a></li>
-                        <li><a href="#">Link in level 2</a></li>
-                    </ul>
-                </li>
             </ul>
         </section>
     </aside>
@@ -84,14 +73,14 @@ include_once '../process/connector.php';
             <div class="row">
                 <div class="col-lg-3 col-xs-6">
                     <!-- small box -->
-                    <div class="small-box bg-aqua">
+                    <div class="small-box bg-blue">
                         <div class="inner">
                             <h3>150</h3>
 
-                            <p>New Orders</p>
+                            <p>Total Student</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="ion ion-android-desktop"></i>
                         </div>
                         <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
@@ -161,7 +150,7 @@ include_once '../process/connector.php';
                                 <th>No.</th>
                                 <th>Subject</th>
                                 <th>Date</th>
-                                <th>Student</th>
+                                <th>Student Name</th>
                                 <th>Level / Time</th>
                                 <th>Pass %</th>
                                 <th>Score</th>
@@ -278,6 +267,8 @@ include_once '../process/connector.php';
 
         </section>
         <!-- /.content -->
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -289,5 +280,16 @@ include_once '../process/connector.php';
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 </body>
 </html>
