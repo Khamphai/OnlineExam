@@ -5,12 +5,19 @@ $category_id = @$_POST['category'];
 $subject_id = @$_POST['subject'];
 $search = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['CLICKED'] == 'add_qt'){
+    if (@$_POST['CLICKED'] == 'add_qt'){
         $_SESSION['cat_id'] = $category_id;
         $_SESSION['sub_id'] = $subject_id;
         header("Location: add_question.php");
-    }else if ($_POST['CLICKED'] == 'search') {
+    }else if (@$_POST['CLICKED'] == 'search') {
         $search = true;
+        $sql = "SELECT A.TITLE AS SUB_TITLE, A.DESCRIPTION AS SUB_DESC, A.GIVE_MINUTE AS SUB_TIME,
+                B.NAME AS CAT_NAME, B.DESCRIPTION AS CAT_DESC FROM TB_SUBJECTS A INNER JOIN TB_CATEGORY B
+                ON(A.CAT_ID=B.CAT_ID) WHERE A.SUB_ID = $subject_id AND B.CAT_ID = $category_id";
+        $result = mysqli_query($link, $sql);
+        $data = mysqli_fetch_assoc($result);
+    }else if (@$_POST['DEL'] == 'del_qt') {
+        echo "Delete Item " . @$_POST['q_id'];
     }
 }
 ?>
@@ -24,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="../assets/plugins/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
     <link rel="stylesheet" href="../assets/css/exam.css">
@@ -116,6 +122,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </form>
                         </div>
                     </div>
+
+                    <?php
+                    if ($search) {
+                    ?>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="alert bg-info text-center" style="font-size: large; margin-top: 20px;">
+                                <b>Category:</b> [<?= htmlspecialchars($data['CAT_NAME']) ?>]
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="alert bg-info text-center" style="font-size: large; margin-top: 20px;">
+                                <b>Subject:</b> [<?= htmlspecialchars($data['SUB_TITLE']) ?>]
+                            </p>
+                        </div>
+                    </div>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -129,18 +152,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
+                    <?php
+                    if ($search) {
+                    ?>
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Question</th>
-                                <th>View</th>
+                                <th>Level</th>
+                                <th>Answer Type</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            if ($search) {
                                 $sql = "SELECT A.*, B.*, C.* FROM TB_QUESTIONS A
                                             INNER JOIN TB_SUBJECTS B ON A.SUB_ID = B.SUB_ID
                                             INNER JOIN TB_CATEGORY C ON B.CAT_ID = C.CAT_ID
@@ -150,7 +177,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $no = 0;
                                 if ($count > 0) {
                                     while ($row = mysqli_fetch_assoc($result)) { ?>
-                                        <tr>
+                                        <tr
+                                            <?php
+                                            if ($row['q_status'] == 1) {
+                                                echo "class='bg-success'";
+                                            } else {
+                                                echo "class='bg-danger'";
+                                            }
+                                            ?>
+                                        >
                                             <td>
                                                 <?= @++$no; ?>
                                             </td>
@@ -158,6 +193,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <?= htmlspecialchars($row['q_title']) ?>
                                             </td>
                                             <td>
+                                                <?php
+                                                if ($row['level'] == 1) {
+                                                    echo "<span class=\"text-center badge bg-green\">Easiest</span>";
+                                                }else if($row['level'] == 2){
+                                                    echo "<span class=\"text-center badge bg-blue\">Normal</span>";
+                                                }else if($row['level'] == 3){
+                                                    echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
+                                                }else {
+                                                    echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if ($row['q_answer_type'] == 1) {
+                                                    echo "<span class=\"text-center badge bg-green\">Single</span>";
+                                                } else {
+                                                    echo "<span class=\"text-center badge bg-blue\">Multiple</span>";
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-sm bg-orange-active">EDIT <i class="fa fa-pencil"></i></a> &nbsp;
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteItem"
+                                                        data-q-id="<?=htmlspecialchars($row['q_id'])?>"
+                                                        class="btn bg-red btn-sm show-btn-del">DEL <i
+                                                            class="fa fa-times-circle"></i>
+                                                </button> &nbsp;
                                                 <a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i class="fa fa-bars"></i></a>
                                             </td>
                                         </tr>
@@ -172,7 +237,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </td>
                                 </tr>
                             <?php }
-                            }
                             mysqli_close($link);
                             ?>
                             </tbody>
@@ -180,12 +244,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <!-- /.table-responsive -->
                 </div>
+                <?php
+                } else {
+                ?>
+                <p class="alert bg-info text-center" style="font-size: large; margin-top: 20px;">
+                    Please choose category and subject to find question has an related
+                </p>
+                <?php } ?>
             </div>
             <!-- /.box -->
 
         </section>
 
         <?php include_once '../loading.php'; ?>
+    </div>
+
+    <div class="modal fade" id="deleteItem" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                    <div class="modal-body text-center">
+                        <br/>
+                        <p class="text-gray" style="font-size: 70px">
+                            <i class="fa fa-question-circle-o"></i>
+                        </p>
+                        <h3 class="text-primary">Do you want to delete this question ?</h3>
+                        <br/>
+                        <input type="hidden" id="DEL" name="DEL" value=""/>
+                        <input type="hidden" name="q_id" class="q_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn bg-red delBtn" id="del_qt"><i class="fa fa-check-circle"></i>
+                            Delete
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
 
     <footer class="main-footer">
@@ -196,7 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="../assets/plugins/select2/dist/js/select2.full.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -209,11 +307,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $('.overlay').hide();
     }
 </script>
-<script>
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-    })
+<script type="text/javascript">
+    $('button.show-btn-del').on('click', function () {
+        let qId = $(this).data('q-id');
+        $('input.q_id').val(qId);
+    });
 </script>
 <script>
     $(document).ready(function() {
@@ -251,6 +349,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         {
             let ButtonID = $(this).attr('id');
             $('#CLICKED').val(ButtonID);
+        });
+    });
+
+    $(document).ready(function()
+    {
+        $('.delBtn').click(function()
+        {
+            let ButtonID = $(this).attr('id');
+            $('#DEL').val(ButtonID);
         });
     });
 </script>
