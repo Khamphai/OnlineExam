@@ -40,6 +40,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="assets/plugins/iCheck/all.css">
+    <link rel="stylesheet" href="assets/css/exam.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -91,11 +92,25 @@ if (isset($_POST['submit'])) {
         </form>
         <a href="login.php" class="text-center text-green">I already have a membership</a>
     </div>
+
+    <?php include_once 'loading.php'; ?>
 </div>
 
 <script src="assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="assets/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 <script>
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
