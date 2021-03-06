@@ -2,22 +2,42 @@
 session_start();
 session_unset();
 include_once 'process/connector.php';
+
 $msg = "";
 $status = false;
 $full_name = @$_POST['full_name'];
-$terms = @$_POST['terms'];
 $email = @$_POST['email'];
 $passwd = @$_POST['passwd'];
 $re_passwd = @$_POST['re_passwd'];
+$terms = @$_POST['terms'];
 if (isset($_POST['submit'])) {
-    if (empty($full_name) || empty($terms) || empty($email) || empty($passwd) || empty($re_passwd)) {
-        $msg = "Input form must not be empty";
-    }else if ($passwd !== $re_passwd) {
+
+    if (empty($_POST["full_name"])) {
+        $msg = "Please enter your full name.";
+    } else if (strlen($_POST["full_name"]) <= 5) {
+        $msg = "Your full name must be more than 5 chars.";
+    } else if (strlen($_POST["full_name"]) >= 50) {
+        $msg = "Your full name must be less than 50 chars.";
+    } else if (empty(trim($_POST["email"]))) {
+        $msg = "Please enter your email.";
+    } else if (!preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", trim($_POST["email"]))) {
+        $msg = "Your email incorrect format.";
+    } else if (empty(trim($_POST["passwd"]))) {
+        $msg = "Please enter your password.";
+    } else if (!preg_match("/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{4,8}$/", trim($_POST["passwd"]))) {
+        $msg = "The password should be include 4-8 char and numeric.";
+    } else if (empty(trim($_POST["re_passwd"]))) {
+        $msg = "Please enter your re-password.";
+    } else if ($passwd !== $re_passwd) {
         $msg = "Your input password mismatch";
-    }else{
+    } else if (empty(trim($_POST["terms"]))) {
+        $msg = "Please accept our terms!";
+    } else {
+
         $em = mysqli_real_escape_string($link, $email);
         $ps = mysqli_real_escape_string($link, $passwd);
         $fn = mysqli_real_escape_string($link, $full_name);
+        $ps = md5($ps); // encrypt to md5 algorithm
         $sql = "INSERT INTO `tb_users` (`user_id`, `email`, `password`, `fullname`, `role`, `status`)
             VALUES (NULL, '" . $em . "', '" . $ps . "', '" . $fn . "', 'student', 1)";
         if (mysqli_query($link, $sql)) {
@@ -25,7 +45,7 @@ if (isset($_POST['submit'])) {
         } else {
             $msg = "Error: " . $sql . "<br>" . mysqli_error($link);
         }
-        mysqli_error($link);
+        mysqli_close($link);
     }
 }
 ?>
@@ -62,26 +82,26 @@ if (isset($_POST['submit'])) {
         <p class="login-box-msg">Register a new membership</p>
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
             <div class="form-group has-feedback">
-                <input type="text" name="full_name" class="form-control" value="<?=$full_name?>" placeholder="Full name" required>
+                <input type="text" name="full_name" class="form-control" value="<?=$full_name?>" placeholder="Full name">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="email" name="email" class="form-control" value="<?=$email?>" placeholder="Email" required>
+                <input type="text" name="email" class="form-control" value="<?=$email?>" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="passwd" class="form-control" placeholder="Password" required>
+                <input type="password" name="passwd" value="<?=$passwd?>" class="form-control" placeholder="Password">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="re_passwd" class="form-control" placeholder="Retype password" required>
+                <input type="password" name="re_passwd" value="<?=$re_passwd?>" class="form-control" placeholder="Retype password">
                 <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
             </div>
             <div class="row">
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
                         <label>
-                            <input type="checkbox" name="terms" class="flat-red" value="accepted" required <?php if ($terms == 'accepted') echo 'checked'; ?>> &nbsp; I agree to the <a
+                            <input type="checkbox" name="terms" class="flat-red" value="accepted" <?php if ($terms == 'accepted') echo 'checked'; ?>> &nbsp; I agree to the <a
                                     href="#" class="text-center text-green">terms</a>
                         </label>
                     </div>
