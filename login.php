@@ -13,13 +13,10 @@ $password = @$_POST['password'];
 $remember = @$_POST['remember'];
 if (isset($_POST['submit'])) {
 
-    $pattern = "/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix";
     if (empty(trim($_POST["email"]))) {
         $msg = "Please enter your email.";
     } else if (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
         $msg = "Your email incorrect format.";
-//    } else if (!preg_match($pattern, trim($_POST["email"]))) {
-//        $msg = "Your email incorrect format.";
     } else if (empty(trim($_POST["password"]))) {
         $msg = "Please enter your password.";
     } else {
@@ -27,8 +24,8 @@ if (isset($_POST['submit'])) {
         $password = stripcslashes($password);
         $email = mysqli_real_escape_string($link, $email);
         $password = mysqli_real_escape_string($link, $password);
-
-        $sql = "SELECT * FROM `tb_users` WHERE `email` = '$email' AND password = '$password'";
+        $ps = md5($password);
+        $sql = "SELECT * FROM `tb_users` WHERE `email` = '$email' AND password = '$ps'";
         $result = mysqli_query($link, $sql);
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
         $count = mysqli_num_rows($result);
@@ -69,6 +66,7 @@ if (isset($_POST['submit'])) {
         } else {
             $msg = "Login failed. Invalid username or password";
         }
+        mysqli_close($link);
     }
 }
 ?>
