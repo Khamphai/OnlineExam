@@ -37,7 +37,7 @@ if($count_main != 1) header('Location: review.php');
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -70,7 +70,7 @@ if($count_main != 1) header('Location: review.php');
                 <li class="active"><a href="#"><i class="fa fa-bar-chart"></i> <span>Monitor</span></a></li>
                 <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
                 <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
-                <li><a href="question.php"><i class="fa fa-link"></i> <span>Question</span></a></li>
+                <li><a href="question.php"><i class="fa fa-plus-circle"></i> <span>Question</span></a></li>
             </ul>
         </section>
     </aside>
@@ -85,7 +85,7 @@ if($count_main != 1) header('Location: review.php');
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">monitor detail</li>
             </ol>
-            <a href="index.php" class="btn btn-sm bg-orange-active" style="margin-top: 10px;">
+            <a href="index.php" class="btn bg-orange-active" style="margin-top: 10px;">
                 <i class="fa fa-chevron-circle-left"></i> Back
             </a>
         </section>

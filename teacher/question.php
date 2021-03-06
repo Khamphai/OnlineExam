@@ -1,8 +1,11 @@
 <?php
 session_start();
 include_once '../process/connector.php';
+unset($_SESSION['cat_id']);
+unset($_SESSION['sub_id']);
 $category_id = @$_POST['category'];
 $subject_id = @$_POST['subject'];
+$user_id = $_SESSION['user_id'];
 $search = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (@$_POST['CLICKED'] == 'add_qt'){
@@ -36,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -66,10 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li><a href="index.php"><i class="fa fa-link"></i> <span>Monitor</span></a></li>
+                <li><a href="index.php"><i class="fa fa-bar-chart"></i> <span>Monitor</span></a></li>
                 <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
                 <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Question</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-plus-circle"></i> <span>Question</span></a></li>
             </ul>
         </section>
     </aside>
@@ -128,12 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ?>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="alert bg-info text-center" style="font-size: large; margin-top: 20px;">
+                            <p class="alert bg-success text-center" style="font-size: large; margin-top: 20px;">
                                 <b>Category:</b> [<?= htmlspecialchars($data['CAT_NAME']) ?>]
                             </p>
                         </div>
                         <div class="col-md-6">
-                            <p class="alert bg-info text-center" style="font-size: large; margin-top: 20px;">
+                            <p class="alert bg-success text-center" style="font-size: large; margin-top: 20px;">
                                 <b>Subject:</b> [<?= htmlspecialchars($data['SUB_TITLE']) ?>]
                             </p>
                         </div>
@@ -163,6 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <th>Question</th>
                                 <th>Level</th>
                                 <th>Answer Type</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -177,15 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $no = 0;
                                 if ($count > 0) {
                                     while ($row = mysqli_fetch_assoc($result)) { ?>
-                                        <tr
-                                            <?php
-                                            if ($row['q_status'] == 1) {
-                                                echo "class='bg-success'";
-                                            } else {
-                                                echo "class='bg-danger'";
-                                            }
-                                            ?>
-                                        >
+                                        <tr>
                                             <td>
                                                 <?= @++$no; ?>
                                             </td>
@@ -211,6 +207,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     echo "<span class=\"text-center badge bg-green\">Single</span>";
                                                 } else {
                                                     echo "<span class=\"text-center badge bg-blue\">Multiple</span>";
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if ($row['q_status'] == 1) {
+                                                    echo "<span class=\"text-center badge bg-green\">Available</span>";
+                                                } else {
+                                                    echo "<span class=\"text-center badge bg-orange\">Not Available</span>";
                                                 }
                                                 ?>
                                             </td>
@@ -321,7 +326,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 url: "subject-by-category.php",
                 type: "POST",
                 data: {
-                    category_id: category_id
+                    category_id: category_id,
+                    u_id: <?=$user_id?>
                 },
                 cache: false,
                 success: function(result){

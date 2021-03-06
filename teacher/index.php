@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once '../process/connector.php';
+$user_id = $_SESSION['user_id'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,7 +18,7 @@ include_once '../process/connector.php';
     <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -50,7 +51,7 @@ include_once '../process/connector.php';
                 <li class="active"><a href="#"><i class="fa fa-bar-chart"></i> <span>Monitor</span></a></li>
                 <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
                 <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
-                <li><a href="question.php"><i class="fa fa-link"></i> <span>Question</span></a></li>
+                <li><a href="question.php"><i class="fa fa-plus-circle"></i> <span>Question</span></a></li>
             </ul>
         </section>
     </aside>
@@ -135,7 +136,7 @@ include_once '../process/connector.php';
 
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <h4 class="box-title">Review score Examination</h4>
+                    <h4 class="box-title">Review student score Examination</h4>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                     class="fa fa-minus"></i></button>
@@ -149,7 +150,7 @@ include_once '../process/connector.php';
                             <tr>
                                 <th>No.</th>
                                 <th>Subject</th>
-                                <th>Date</th>
+                                <th>Date / Use Time</th>
                                 <th>Student Name</th>
                                 <th>Level / Time</th>
                                 <th>Pass %</th>
@@ -166,6 +167,7 @@ include_once '../process/connector.php';
                                                INNER JOIN TB_USERS U ON (A.USER_ID=U.USER_ID)
                                                INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
                                                INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
+                                    WHERE TEACHER_ID = $user_id
                                     ORDER BY A.TEST_ID DESC";
                             $result = mysqli_query($link, $sql);
                             $no = 0;
@@ -247,7 +249,7 @@ include_once '../process/connector.php';
                             } else {
                                 ?>
                                 <tr>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
                                             Not found the exam result
                                         </p>
