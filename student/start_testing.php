@@ -125,7 +125,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -155,8 +155,8 @@ header( "refresh:$time_on; url=../process/process_score.php");
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li><a href="review.php"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-cube"></i> <span>Exam</span></a></li>
+                <li><a href="index.php"><i class="fa fa-list-alt"></i> <span>Review</span></a></li>
             </ul>
         </section>
     </aside>
@@ -171,9 +171,13 @@ header( "refresh:$time_on; url=../process/process_score.php");
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">Testing</li>
             </ol>
-            <a href="index.php" class="btn btn-sm bg-red" style="margin-top: 10px;">
+            <button type="button"
+                    data-toggle="modal"
+                    data-target="#stopItem"
+                    class="btn bg-red"
+                    style="margin-top: 10px;">
                 <i class="fa fa-times-circle"></i> Stop Testing
-            </a>
+            </button>
         </section>
 
         <!-- Main content -->
@@ -187,6 +191,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
                             </span>
                             <div class="info-box-content">
                                 <span class="info-box-number"><?= htmlspecialchars($data['CAT_NAME']) ?></span>
+                                <span class="info-box-more"><?=htmlspecialchars($data['CAT_DESC'])?></span>
                             </div>
                         </div>
                     </div>
@@ -366,6 +371,32 @@ header( "refresh:$time_on; url=../process/process_score.php");
         </form>
 
         <?php include_once '../loading.php'; ?>
+    </div>
+
+    <div class="modal fade" id="stopItem" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                    <div class="modal-body text-center">
+                        <br/>
+                        <p class="text-gray" style="font-size: 70px">
+                            <i class="fa fa-question-circle-o"></i>
+                        </p>
+                        <h3 class="text-primary">Do you want to stop this testing ?</h3>
+                        <br/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                            Cancel
+                        </button>
+                        <a href="choose_category.php" class="btn bg-red">
+                            <i class="fa fa-check-circle"></i> Stop!
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
 
     <footer class="main-footer">

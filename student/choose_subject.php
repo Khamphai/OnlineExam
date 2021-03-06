@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -52,7 +52,7 @@ if (isset($_POST['submit'])) {
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?=htmlspecialchars($_SESSION['full_name'])?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -69,8 +69,8 @@ if (isset($_POST['submit'])) {
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li><a href="review.php"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-cube"></i> <span>Exam</span></a></li>
+                <li><a href="index.php"><i class="fa fa-list-alt"></i> <span>Review</span></a></li>
             </ul>
         </section>
     </aside>
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">Subjects</li>
             </ol>
-            <a href="index.php" class="btn btn-sm bg-orange" style="margin-top: 10px;">
+            <a href="choose_category.php" class="btn bg-orange" style="margin-top: 10px;">
                 <i class="fa fa-chevron-circle-left"></i> Back
             </a>
         </section>

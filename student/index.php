@@ -12,7 +12,7 @@ if ($_SESSION['state'] === 'login') {
         unset($_SESSION['time']);
         unset($_SESSION['start_test']);
         unset($_SESSION['end_test']);
-        header("Location: choose_category.php");
+        header("Location: review.php");
     } else {
         session_unset();
         header("Location: login.php");

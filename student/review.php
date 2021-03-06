@@ -18,7 +18,7 @@ include_once '../process/connector.php';
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -48,8 +48,8 @@ include_once '../process/connector.php';
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li><a href="index.php"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li><a href="choose_category.php"><i class="fa fa-cube"></i> <span>Exam</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-list-alt"></i> <span>Review</span></a></li>
             </ul>
         </section>
     </aside>

@@ -35,7 +35,7 @@ if($count != 1) header('Location: test_result.php');
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -65,8 +65,8 @@ if($count != 1) header('Location: test_result.php');
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li><a href="review.php"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-cube"></i> <span>Exam</span></a></li>
+                <li><a href="index.php"><i class="fa fa-list-alt"></i> <span>Review</span></a></li>
             </ul>
         </section>
     </aside>
@@ -79,9 +79,9 @@ if($count != 1) header('Location: test_result.php');
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Review</li>
+                <li class="active">Review Answer</li>
             </ol>
-            <a href="test_result.php" class="btn btn-sm bg-orange-active" style="margin-top: 10px;">
+            <a href="test_result.php" class="btn bg-orange-active" style="margin-top: 10px;">
                 <i class="fa fa-chevron-circle-left"></i> Back
             </a>
         </section>
@@ -92,7 +92,7 @@ if($count != 1) header('Location: test_result.php');
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h4 class="box-title">
-                        Review Testing
+                        Review Testing Answer
                     </h4>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i

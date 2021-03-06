@@ -36,7 +36,7 @@ $data = mysqli_fetch_assoc($result);
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -49,7 +49,7 @@ $data = mysqli_fetch_assoc($result);
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?=htmlspecialchars($_SESSION['full_name'])?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -66,8 +66,8 @@ $data = mysqli_fetch_assoc($result);
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li><a href="review.php"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-cube"></i> <span>Exam</span></a></li>
+                <li><a href="index.php"><i class="fa fa-list-alt"></i> <span>Review</span></a></li>
             </ul>
         </section>
     </aside>
@@ -158,7 +158,7 @@ $data = mysqli_fetch_assoc($result);
 
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h4 class="box-title">Your result testing score</h4>
+                        <h4 class="box-title">Your result testing score <b>[All Question: <span class="text-red"><?=$q_count?></span>]</b></h4>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
@@ -169,11 +169,11 @@ $data = mysqli_fetch_assoc($result);
                             <table class="table no-margin">
                                 <thead>
                                 <tr>
-                                    <th>Q No.</th>
-                                    <th>Your Choice</th>
-                                    <th>Correct Answer</th>
-                                    <th>Judge</th>
-                                    <th>Explain/Review</th>
+                                    <th class="text-center">Q No.</th>
+                                    <th class="text-center">Your Choice</th>
+                                    <th class="text-center">Correct Answer</th>
+                                    <th class="text-center">Judge</th>
+                                    <th class="text-center">Explain/Review</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -185,12 +185,12 @@ $data = mysqli_fetch_assoc($result);
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     ?>
                                     <tr>
-                                        <td>
+                                        <td class="text-center">
                                             <?=@++$no?>
                                         </td>
-                                        <td><?=htmlspecialchars($row['sc_choice'])?></td>
-                                        <td><?=htmlspecialchars($row['sc_answer'])?></td>
-                                        <td>
+                                        <td class="text-center text-bold text-orange"><?=htmlspecialchars($row['sc_choice'])?></td>
+                                        <td class="text-center text-bold text-green"><?=htmlspecialchars($row['sc_answer'])?></td>
+                                        <td class="text-center">
                                             <?php
                                             if ($row['sc_judge'] === 'Good') {
                                                 $percent += 100;
@@ -202,7 +202,7 @@ $data = mysqli_fetch_assoc($result);
                                             }
                                             ?>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <a href="view.php?vTestID=<?=$test_id?>&vQID=<?=$row['q_id']?>" class="btn btn-sm bg-gray-active">GO &nbsp; <i class="fa fa-bars"></i></a>
                                         </td>
                                     </tr>

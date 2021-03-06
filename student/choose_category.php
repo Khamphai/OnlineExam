@@ -1,7 +1,16 @@
 <?php
 session_start();
 include_once '../process/connector.php';
-
+unset($_SESSION['category_id']);
+unset($_SESSION['subject_id']);
+unset($_SESSION['question']);
+unset($_SESSION['q_count']);
+unset($_SESSION['give_minute']);
+unset($_SESSION['action']);
+unset($_SESSION['answers']);
+unset($_SESSION['time']);
+unset($_SESSION['start_test']);
+unset($_SESSION['end_test']);
 $cat_id = @$_GET['id'];
 if (!empty($cat_id)) {
     $_SESSION['category_id'] = $cat_id;
@@ -23,7 +32,7 @@ if (!empty($cat_id)) {
     <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -36,7 +45,7 @@ if (!empty($cat_id)) {
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?=htmlspecialchars($_SESSION['full_name'])?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -53,8 +62,8 @@ if (!empty($cat_id)) {
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Exam</span></a></li>
-                <li><a href="review.php"><i class="fa fa-link"></i> <span>Review</span></a></li>
+                <li class="active"><a href="#"><i class="fa fa-cube"></i> <span>Exam</span></a></li>
+                <li><a href="index.php"><i class="fa fa-list-alt"></i> <span>Review</span></a></li>
             </ul>
         </section>
     </aside>
