@@ -13,8 +13,13 @@ $password = @$_POST['password'];
 $remember = @$_POST['remember'];
 if (isset($_POST['submit'])) {
 
+    $pattern = "/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix";
     if (empty(trim($_POST["email"]))) {
         $msg = "Please enter your email.";
+    } else if (!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)) {
+        $msg = "Your email incorrect format.";
+//    } else if (!preg_match($pattern, trim($_POST["email"]))) {
+//        $msg = "Your email incorrect format.";
     } else if (empty(trim($_POST["password"]))) {
         $msg = "Please enter your password.";
     } else {
@@ -101,12 +106,11 @@ if (isset($_POST['submit'])) {
 
         <form action="login.php" method="post">
             <div class="form-group has-feedback">
-                <input type="email" name="email" value="<?= $email ?>" class="form-control" placeholder="Email"
-                       required>
+                <input type="text" name="email" value="<?= $email ?>" class="form-control" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                <input type="password" name="password" value="<?= $password ?>" class="form-control" placeholder="Password">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
             <div class="row">
@@ -146,7 +150,7 @@ if (isset($_POST['submit'])) {
         $('.overlay').hide();
     }
 </script>
-<script>
+<script type="text/javascript">
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
             checkboxClass: 'icheckbox_flat-green',
