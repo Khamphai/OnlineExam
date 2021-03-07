@@ -149,15 +149,15 @@ include_once '../process/connector.php';
                                             </span>
                                             </td>
                                             <td>
-                                                <span class="text-blue text-bold"><?=htmlspecialchars($row['CNT_QT'])?></span> / <span class="text-blue text-bold"><?=htmlspecialchars($row['CNT_QT_ALL'])?></span>
+                                                <span class="<?php if($row['CNT_QT'] == $row['CNT_QT_ALL']) echo 'text-blue'; else echo 'text-red'; ?> text-bold"><?=htmlspecialchars($row['CNT_QT'])?></span> / <span class="text-blue text-bold"><?=htmlspecialchars($row['CNT_QT_ALL'])?></span>
                                             </td>
                                             <td>
                                                 <?php
                                                 if ($row['LEVEL'] == 1) {
                                                     echo "<span class=\"text-center badge bg-green\">Easiest</span>";
-                                                } else if ($row['level'] == 2) {
+                                                } else if ($row['LEVEL'] == 2) {
                                                     echo "<span class=\"text-center badge bg-blue\">Normal</span>";
-                                                } else if ($row['level'] == 3) {
+                                                } else if ($row['LEVEL'] == 3) {
                                                     echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
                                                 } else {
                                                     echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";

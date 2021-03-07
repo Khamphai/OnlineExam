@@ -166,7 +166,7 @@ if($count_main != 1) header('Location: review.php');
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h4 class="box-title">
-                        View Detail your Testing [<b>Answer Question:</b> <span class="text-blue"><?=htmlspecialchars($data['CNT_QT'])?></span> of <span class="text-blue"><?=htmlspecialchars($data['CNT_QT_ALL'])?></span>]
+                        View Detail your Testing [<b>Answer Question:</b> <span class="<?php if($data['CNT_QT'] == $data['CNT_QT_ALL']) echo 'text-blue'; else echo 'text-red'; ?>"><?=htmlspecialchars($data['CNT_QT'])?></span> of <span class="text-blue"><?=htmlspecialchars($data['CNT_QT_ALL'])?></span>]
                     </h4>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i

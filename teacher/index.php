@@ -153,6 +153,7 @@ $user_id = $_SESSION['user_id'];
                                 <th>Subject</th>
                                 <th>Date / Use Time</th>
                                 <th>Student Name</th>
+                                <th>Question</th>
                                 <th>Level / Time</th>
                                 <th>Pass %</th>
                                 <th>Score</th>
@@ -162,7 +163,7 @@ $user_id = $_SESSION['user_id'];
                             </thead>
                             <tbody>
                             <?php
-                            $sql = "SELECT U.USER_ID, U.FULLNAME AS FULL_NAME, A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
+                            $sql = "SELECT U.USER_ID, U.FULLNAME AS FULL_NAME, A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, A.TEST_COUNT_QUESTION AS CNT_QT, A.ALL_QUESTION AS CNT_QT_ALL, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
                                            B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT,
                                            C.NAME AS CAT_NAME FROM TB_TEST_RESULT A
                                                INNER JOIN TB_USERS U ON (A.USER_ID=U.USER_ID)
@@ -187,7 +188,7 @@ $user_id = $_SESSION['user_id'];
                                             }
                                         }
                                         $pass_percent = (int) $row['PASS_PERCENT'];
-                                        $mark_percent = round($percent/$count_score);
+                                        $mark_percent = round($percent/$row['CNT_QT_ALL']);
                                         if ($mark_percent >= $pass_percent) {
                                             $judge = "<span class='text-green text-bold'>PASSED</span>";
                                         }else{
@@ -216,12 +217,15 @@ $user_id = $_SESSION['user_id'];
                                             </td>
                                             <td><?=htmlspecialchars($row['FULL_NAME'])?></td>
                                             <td>
+                                                <span class="<?php if($row['CNT_QT'] == $row['CNT_QT_ALL']) echo 'text-blue'; else echo 'text-red'; ?> text-bold"><?=htmlspecialchars($row['CNT_QT'])?></span> / <span class="text-blue text-bold"><?=htmlspecialchars($row['CNT_QT_ALL'])?></span>
+                                            </td>
+                                            <td>
                                                 <?php
                                                 if ($row['LEVEL'] == 1) {
                                                     echo "<span class=\"text-center badge bg-green\">Easiest</span>";
-                                                } else if ($row['level'] == 2) {
+                                                } else if ($row['LEVEL'] == 2) {
                                                     echo "<span class=\"text-center badge bg-blue\">Normal</span>";
-                                                } else if ($row['level'] == 3) {
+                                                } else if ($row['LEVEL'] == 3) {
                                                     echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
                                                 } else {
                                                     echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";
