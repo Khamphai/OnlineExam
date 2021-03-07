@@ -73,11 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = "Please select the correct answer";
         } else {
             $input_val = "";
-            !empty($answer1) ? $input_val .= "1," : $input_val .= "";
-            !empty($answer2) ? $input_val .= "2," : $input_val .= "";
-            !empty($answer3) ? $input_val .= "3," : $input_val .= "";
-            !empty($answer4) ? $input_val .= "4," : $input_val .= "";
-            !empty($answer5) ? $input_val .= "5," : $input_val .= "";
+            !empty($answer1) ? $input_val .= "1" : $input_val .= "";
+            !empty($answer2) ? $input_val .= "2" : $input_val .= "";
+            !empty($answer3) ? $input_val .= "3" : $input_val .= "";
+            !empty($answer4) ? $input_val .= "4" : $input_val .= "";
+            !empty($answer5) ? $input_val .= "5" : $input_val .= "";
 
             empty($status) ? $status = 0 : $status = 1;
 
@@ -85,12 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cnt_ans = $count_ans;
             if ($count_ans > 1) {
                 foreach ($correct_answer as $value) {
-                    $ans_sel .= $count_ans > 1 ? $value . "," : $value;
-                    $count_ans -= 1;
                     // Multiple
-                    if (!strpos($input_val, $value) !== false) {
+                    if (strpos("$input_val", "$value") === false) {
                         $msg = "multiple";
                     }
+                    $ans_sel .= $count_ans > 1 ? $value . "," : $value;
+                    $count_ans -= 1;
                 }
             } else {
                 $ans_sel = $correct_answer[0];
