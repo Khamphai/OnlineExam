@@ -22,6 +22,7 @@ $statusFailed = false;
 $delSuccess = false;
 $delWarn = false;
 $delFailed = false;
+$view = false;
 
 // question info
 $title = @$_POST['title'];
@@ -59,6 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $delSuccess = true;
             }
+        }
+    } else if (@$_POST['VIEW'] == 'v_a_qt') {
+
+        // Find Question via ID
+        $q_id = @$_POST['q_id'];
+        $v_sql = "SELECT * FROM TB_QUESTIONS WHERE Q_ID = $q_id";
+        $v_result = mysqli_query($link, $v_sql);
+        $v_row = mysqli_fetch_array($v_result, MYSQLI_ASSOC);
+        $v_count = mysqli_num_rows($v_result);
+        if ($v_count == 1) {
+            $view = true;
         }
     } else {
         if (empty($title)) {
@@ -297,17 +309,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             ?>
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-sm bg-orange-active">EDIT <i
-                                                        class="fa fa-pencil"></i></a> &nbsp;
-                                            <button type="button"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteItem"
-                                                    data-q-id="<?= htmlspecialchars($row['q_id']) ?>"
-                                                    class="btn bg-red btn-sm show-btn-del">DEL <i
-                                                        class="fa fa-times-circle"></i>
-                                            </button> &nbsp;
-                                            <a href="#" class="btn btn-sm bg-gray-active">GO &nbsp; <i
-                                                        class="fa fa-bars"></i></a>
+                                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                                                <a href="#" class="btn btn-sm bg-orange-active">EDIT <i
+                                                            class="fa fa-pencil"></i></a> &nbsp;
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteItem"
+                                                        data-q-id="<?= htmlspecialchars($row['q_id']) ?>"
+                                                        class="btn bg-red btn-sm show-btn-del">DEL <i
+                                                            class="fa fa-times-circle"></i>
+                                                </button> &nbsp;
+                                                <input type="hidden" name="VIEW" value="v_a_qt">
+                                                <input type="hidden" name="category" value="<?=$category_id?>">
+                                                <input type="hidden" name="subject" value="<?=$subject_id?>">
+                                                <input type="hidden" name="q_id" value="<?= htmlspecialchars($row['q_id']) ?>">
+                                                <button type="submit" class="btn btn-sm bg-gray-active">VIEW &nbsp;
+                                                    <i class="fa fa-bars"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php }
@@ -686,6 +705,130 @@ if ($delFailed) {
     </div>
 </div>
 <?php
+}
+?>
+<?php
+if ($view) {
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.loading').hide();
+            $('.overlay').hide();
+            $("#modal-view-question").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-view-question" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <br/><br/>
+                    <div class="table-responsive">
+                        <table class="table no-margin table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th colspan="3">
+                                    <h4><b>[Question]</b></h4>
+                                    <p style="font-weight: lighter !important;"><?=htmlspecialchars($v_row['q_title']);?></p>
+                                    <h4><b>[Answer]</b></h4>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th class="text-center" style="width: 150px;">No.</th>
+                                <th>List Answer</th>
+                                <th class="text-center" style="width: 150px;">Correct Answer</th>
+                            </tr>
+                            <?php if ($v_row['q_sel1']) {?>
+                                <tr
+                                    <?php
+                                    if (strpos($v_row['q_answer'], '1') !== false) {
+                                        echo "class='bg-success'";
+                                    }
+                                    ?>
+                                >
+                                    <td class="text-center" style="width: 50px;">1</td>
+                                    <td><?= htmlspecialchars($v_row['q_sel1']) ?></td>
+                                    <td class="text-center" style="width: 140px; font-size: large">
+                                        <?php if (strpos($v_row['q_answer'], '1') !== false ) echo "<i class='fa fa-check-circle text-green'></i>"; else echo "<i class='fa fa-times-circle text-red'></i>" ?>
+                                    </td>
+                                </tr>
+                            <?php }if ($v_row['q_sel2']) {?>
+                                <tr
+                                    <?php
+                                    if (strpos($v_row['q_answer'], '2') !== false) {
+                                        echo "class='bg-success'";
+                                    }
+                                    ?>
+                                >
+                                    <td class="text-center" style="width: 50px;">2</td>
+                                    <td><?= htmlspecialchars($v_row['q_sel2']) ?></td>
+                                    <td class="text-center" style="width: 140px; font-size: large">
+                                        <?php if (strpos($v_row['q_answer'], '2') !== false ) echo "<i class='fa fa-check-circle text-green'></i>"; else echo "<i class='fa fa-times-circle text-red'></i>" ?>
+                                    </td>
+                                </tr>
+                            <?php }if ($v_row['q_sel3']) {?>
+                                <tr
+                                    <?php
+                                    if (strpos($v_row['q_answer'], '3') !== false) {
+                                        echo "class='bg-success'";
+                                    }
+                                    ?>
+                                >
+                                    <td class="text-center" style="width: 50px;">3</td>
+                                    <td><?= htmlspecialchars($v_row['q_sel3']) ?></td>
+                                    <td class="text-center" style="width: 140px; font-size: large">
+                                        <?php if (strpos($v_row['q_answer'], '3') !== false ) echo "<i class='fa fa-check-circle text-green'></i>"; else echo "<i class='fa fa-times-circle text-red'></i>" ?>
+                                    </td>
+                                </tr>
+                            <?php }if ($v_row['q_sel4']) {?>
+                                <tr
+                                    <?php
+                                    if (strpos($v_row['q_answer'], '4') !== false) {
+                                        echo "class='bg-success'";
+                                    }
+                                    ?>
+                                >
+                                    <td class="text-center" style="width: 50px;">4</td>
+                                    <td><?= htmlspecialchars($v_row['q_sel4']) ?></td>
+                                    <td class="text-center" style="width: 140px; font-size: large">
+                                        <?php if (strpos($v_row['q_answer'], '4') !== false ) echo "<i class='fa fa-check-circle text-green'></i>"; else echo "<i class='fa fa-times-circle text-red'></i>" ?>
+                                    </td>
+                                </tr>
+                            <?php }if ($v_row['q_sel5']) {?>
+                                <tr
+                                    <?php
+                                    if (strpos($v_row['q_answer'], '5') !== false) {
+                                        echo "class='bg-success'";
+                                    }
+                                    ?>
+                                >
+                                    <td class="text-center" style="width: 50px;">5</td>
+                                    <td><?= htmlspecialchars($v_row['q_sel5']) ?></td>
+                                    <td class="text-center" style="width: 140px; font-size: large">
+                                        <?php if (strpos($v_row['q_answer'], '5') !== false ) echo "<i class='fa fa-check-circle text-green'></i>"; else echo "<i class='fa fa-times-circle text-red'></i>" ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            <tr>
+                                <th colspan="1" class="text-center" style="width: 150px;">Explain</th>
+                                <td colspan="2" class="text-orange"><?=htmlspecialchars($v_row['q_explain'])?></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
 }
 ?>
 <script type="text/javascript">
