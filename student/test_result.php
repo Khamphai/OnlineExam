@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
 if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id']) || empty($_SESSION['answers']) || empty($_SESSION['test_id'])) {
     header('Location: index.php');
 }

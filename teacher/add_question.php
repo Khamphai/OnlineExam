@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
 if (empty($_SESSION['cat_id']) || empty($_SESSION['sub_id'])) {
     header('Location: question.php');
 }

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
 $test_id = @$_GET['vTestID'];
 $user_id = @$_GET['vUserID'];
 if (empty($test_id) || empty($user_id)) {

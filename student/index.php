@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
 if ($_SESSION['state'] === 'login') {
     if ($_SESSION['role'] === 'student') {
         unset($_SESSION['category_id']);

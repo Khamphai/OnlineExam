@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
 include_once '../process/connector.php';
 $user_id = $_SESSION['user_id'];
 ?>

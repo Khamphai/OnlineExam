@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
 include_once '../process/connector.php';
 unset($_SESSION['category_id']);
 unset($_SESSION['subject_id']);
