@@ -8,6 +8,9 @@ $category_id = @$_POST['category'];
 $subject_id = @$_POST['subject'];
 $user_id = $_SESSION['user_id'];
 $search = false;
+$delSuccess = false;
+$delWarn = false;
+$delFailed = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (@$_POST['CLICKED'] == 'add_qt') {
         $_SESSION['cat_id'] = $category_id;
@@ -22,7 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = mysqli_query($link, $sql);
         $data = mysqli_fetch_assoc($result);
     } else if (@$_POST['DEL'] == 'del_qt') {
-        echo "Delete Item " . @$_POST['q_id'];
+        $q_id = $_POST['q_id'];
+        $sql = "SELECT * FROM tb_score WHERE q_id = $q_id";
+        $result = mysqli_query($link, $sql);
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $count_del = mysqli_num_rows($result);
+        if ($count_del == 1) {
+            $delWarn = true;
+        } else {
+            $sql = "DELETE FROM tb_questions WHERE q_id = $q_id";
+            $result = mysqli_query($link, $sql);
+            if (!mysqli_query($link, $sql)) {
+                $delFailed = true;
+                $msg = "<span>Error </span>" . $sql . "<br>" . mysqli_error($link);
+            } else {
+                $delSuccess = true;
+            }
+        }
     }
 }
 ?>
@@ -434,6 +453,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<?php
+if ($delSuccess) {
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#modal-success-del-question").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-success-del-question" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-green" style="font-size: 70px">
+                        <i class="fa fa-check-circle"></i>
+                    </p>
+                    <h3 class="text-info">Delete Question Successfully</h3>
+                    <br/><br/>
+                    <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+if ($delWarn) {
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#modal-success-warn-question").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-success-warn-question" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-gray" style="font-size: 70px">
+                        <i class="fa fa-info-circle"></i>
+                    </p>
+                    <h3 class="text-info">This Question already use</h3>
+                    <br/><br/>
+                    <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+if ($delFailed) {
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#modal-failed-del-question").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-failed-del-question" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-red" style="font-size: 70px">
+                        <i class="fa fa-times-circle"></i>
+                    </p>
+                    <h3 class="text-info">Delete Question Unsuccessfully</h3>
+                    <br/><br/>
+                    <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.loading').show();
