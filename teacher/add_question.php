@@ -12,7 +12,7 @@ $user_id = $_SESSION['user_id'];
 // Load data relation
 $sql = "SELECT A.TITLE AS SUB_TITLE, A.DESCRIPTION AS SUB_DESC, A.GIVE_MINUTE AS SUB_TIME,
                 B.NAME AS CAT_NAME, B.DESCRIPTION AS CAT_DESC FROM TB_SUBJECTS A INNER JOIN TB_CATEGORY B
-                ON(A.CAT_ID=B.CAT_ID) WHERE A.SUB_ID = $subject_id AND B.CAT_ID = $category_id";
+                ON(A.CAT_ID=B.CAT_ID) WHERE A.SUB_ID = $subject_id AND B.CAT_ID = $category_id AND (A.TEACHER_ID = $user_id OR B.TEACHER_ID = $user_id);";
 $result = mysqli_query($link, $sql);
 $data = mysqli_fetch_assoc($result);
 
@@ -233,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $sql = "SELECT A.*, B.*, C.* FROM TB_QUESTIONS A
                                             INNER JOIN TB_SUBJECTS B ON A.SUB_ID = B.SUB_ID
                                             INNER JOIN TB_CATEGORY C ON B.CAT_ID = C.CAT_ID
-                                        WHERE B.SUB_ID = $subject_id AND C.CAT_ID = $category_id";
+                                        WHERE B.SUB_ID = $subject_id AND C.CAT_ID = $category_id AND B.TEACHER_ID = $user_id";
                             $result = mysqli_query($link, $sql);
                             $count = mysqli_num_rows($result);
                             $no = 0;

@@ -15,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: add_question.php");
     }else if (@$_POST['CLICKED'] == 'search') {
         $search = true;
-        $sql = "SELECT A.TITLE AS SUB_TITLE, A.DESCRIPTION AS SUB_DESC, A.GIVE_MINUTE AS SUB_TIME,
-                B.NAME AS CAT_NAME, B.DESCRIPTION AS CAT_DESC FROM TB_SUBJECTS A INNER JOIN TB_CATEGORY B
-                ON(A.CAT_ID=B.CAT_ID) WHERE A.SUB_ID = $subject_id AND B.CAT_ID = $category_id";
+        $sql = "SELECT A.TITLE AS SUB_TITLE, A.DESCRIPTION AS SUB_DESC, A.GIVE_MINUTE AS SUB_TIME, B.NAME AS CAT_NAME, B.DESCRIPTION AS CAT_DESC
+                    FROM TB_SUBJECTS A INNER JOIN TB_CATEGORY B
+                    ON(A.CAT_ID=B.CAT_ID)
+                    WHERE A.SUB_ID = $subject_id AND B.CAT_ID = $category_id AND (A.TEACHER_ID = $user_id OR B.TEACHER_ID = $user_id);";
         $result = mysqli_query($link, $sql);
         $data = mysqli_fetch_assoc($result);
     }else if (@$_POST['DEL'] == 'del_qt') {
@@ -105,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select name="category" class="form-control input-lg pull-left" style="margin-right: 5px" id="category-dropdown" style="width: 250px;">
                                     <option value="" selected="selected">Select Category</option>
                                     <?php
-                                    $sql = "SELECT CAT_ID, NAME FROM TB_CATEGORY";
+                                    $sql = "SELECT CAT_ID, NAME FROM TB_CATEGORY WHERE TEACHER_ID = $user_id";
                                     $result = mysqli_query($link, $sql);
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         ?>
@@ -176,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $sql = "SELECT A.*, B.*, C.* FROM TB_QUESTIONS A
                                             INNER JOIN TB_SUBJECTS B ON A.SUB_ID = B.SUB_ID
                                             INNER JOIN TB_CATEGORY C ON B.CAT_ID = C.CAT_ID
-                                        WHERE B.SUB_ID = $subject_id AND C.CAT_ID = $category_id";
+                                        WHERE B.SUB_ID = $subject_id AND C.CAT_ID = $category_id AND B.TEACHER_ID = $user_id";
                                 $result = mysqli_query($link, $sql);
                                 $count = mysqli_num_rows($result);
                                 $no = 0;
