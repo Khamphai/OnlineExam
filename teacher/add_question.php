@@ -19,6 +19,9 @@ $data = mysqli_fetch_assoc($result);
 $msg = "";
 $statusSuccess = false;
 $statusFailed = false;
+$delSuccess = false;
+$delWarn = false;
+$delFailed = false;
 
 // question info
 $title = @$_POST['title'];
@@ -39,82 +42,102 @@ $ans_sel = "";
 
 // Handle clicked
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (empty($title)) {
-        $msg = "Please enter question title";
-    } else if (empty($difficult)) {
-        $msg = "Please select difficulty";
-    } else if (empty($answer_type)) {
-        $msg = "Please select answer type";
-    } else if (empty($answer1) || empty($answer2)) {
-        $msg = "Please enter answer choice more than one choice";
-    } else if (empty($correct_answer)) {
-        $msg = "Please select the correct answer";
-    } else {
-        $input_val = "";
-        !empty($answer1) ? $input_val .= "1," : $input_val .= "";
-        !empty($answer2) ? $input_val .= "2," : $input_val .= "";
-        !empty($answer3) ? $input_val .= "3," : $input_val .= "";
-        !empty($answer4) ? $input_val .= "4," : $input_val .= "";
-        !empty($answer5) ? $input_val .= "5," : $input_val .= "";
-
-        empty($status) ? $status = 0 : $status = 1;
-
-        $count_ans = sizeof($correct_answer);
-        $cnt_ans = $count_ans;
-        if ($count_ans > 1) {
-            foreach ($correct_answer as $value) {
-                $ans_sel .= $count_ans > 1 ? $value . "," : $value;
-                $count_ans -= 1;
-                // Multiple
-                if (!preg_match("/{$ans_sel}/i", $input_val)) {
-                    $msg = "multiple";
-                }
-            }
+    if (@$_POST['DEL'] == 'del_qt') {
+        $q_id = $_POST['q_id'];
+        $sql = "SELECT * FROM tb_score WHERE q_id = $q_id";
+        $result = mysqli_query($link, $sql);
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $count_del = mysqli_num_rows($result);
+        if ($count_del == 1) {
+            $delWarn = true;
         } else {
-            $ans_sel = $correct_answer[0];
-            // Single
-            if (!preg_match("/{$ans_sel}/i", $input_val)) {
-                $msg = "single";
+            $sql = "DELETE FROM tb_questions WHERE q_id = $q_id";
+            $result = mysqli_query($link, $sql);
+            if (!mysqli_query($link, $sql)) {
+                $delFailed = true;
+                $msg = "<span>Error </span>" . $sql . "<br>" . mysqli_error($link);
+            } else {
+                $delSuccess = true;
             }
         }
-
-        // TODO :: check input answer field and correct selected are matching ?
-        if ($msg === 'single') {
-            $msg = "Your input answer choice and select correct answer (single choice) not matching";
-        } else if ($msg === 'multiple') {
-            $msg = "Your input answer choice and select correct answer (multiple choice) not matching";
+    } else {
+        if (empty($title)) {
+            $msg = "Please enter question title";
+        } else if (empty($difficult)) {
+            $msg = "Please select difficulty";
+        } else if (empty($answer_type)) {
+            $msg = "Please select answer type";
+        } else if (empty($answer1) || empty($answer2)) {
+            $msg = "Please enter answer choice more than one choice";
+        } else if (empty($correct_answer)) {
+            $msg = "Please select the correct answer";
         } else {
-            // TODO :: check answer type is 1 or 2 (1=single, 2=multiple)
-            // answer type is multiple && correct answer is single
-            if (strpos($answer_type, '2') !== false && $cnt_ans <= 1) {
-                $msg = "Incorrect! Your answer type is multiple but correct answer is single";
-            } // answer type is single && correct answer is multiple
-            else if (strpos($answer_type, '1') !== false && $cnt_ans > 1) {
-                $msg = "Incorrect! Your answer type is single but correct answer is multiple";
+            $input_val = "";
+            !empty($answer1) ? $input_val .= "1," : $input_val .= "";
+            !empty($answer2) ? $input_val .= "2," : $input_val .= "";
+            !empty($answer3) ? $input_val .= "3," : $input_val .= "";
+            !empty($answer4) ? $input_val .= "4," : $input_val .= "";
+            !empty($answer5) ? $input_val .= "5," : $input_val .= "";
+
+            empty($status) ? $status = 0 : $status = 1;
+
+            $count_ans = sizeof($correct_answer);
+            $cnt_ans = $count_ans;
+            if ($count_ans > 1) {
+                foreach ($correct_answer as $value) {
+                    $ans_sel .= $count_ans > 1 ? $value . "," : $value;
+                    $count_ans -= 1;
+                    // Multiple
+                    if (!strpos($input_val, $value) !== false) {
+                        $msg = "multiple";
+                    }
+                }
             } else {
-                $sql = "INSERT INTO `tb_questions` (`q_id`, `q_title`, `q_desc`, `q_difficulty`, `q_answer_type`, `q_sel1`, `q_sel2`, `q_sel3`, `q_sel4`, `q_sel5`, `q_fig1`, `q_fig2`, `q_fig3`, `q_fig4`, `q_fig5`, `q_answer`, `q_explain`, `q_status`, `sub_id`) VALUES ";
-                $sql .= "(NULL, '$title', '$desc', $difficult, $answer_type, '$answer1', '$answer2', '$answer3', '$answer4', '$answer5', '', '', '', '', '', '$ans_sel', '$explain', $status, $subject_id)";
-                if (!mysqli_query($link, $sql)) {
-                    $statusFailed = true;
-                    $msg = "<span>Error </span>" . $sql . "<br>" . mysqli_error($link);
+                $ans_sel = $correct_answer[0];
+                // Single
+                if (!preg_match("/{$ans_sel}/i", $input_val)) {
+                    $msg = "single";
+                }
+            }
+
+            // TODO :: check input answer field and correct selected are matching ?
+            if ($msg === 'single') {
+                $msg = "Your input answer choice and select correct answer (single choice) not matching";
+            } else if ($msg === 'multiple') {
+                $msg = "Your input answer choice and select correct answer (multiple choice) not matching";
+            } else {
+                // TODO :: check answer type is 1 or 2 (1=single, 2=multiple)
+                // answer type is multiple && correct answer is single
+                if (strpos($answer_type, '2') !== false && $cnt_ans <= 1) {
+                    $msg = "Incorrect! Your answer type is multiple but correct answer is single";
+                } // answer type is single && correct answer is multiple
+                else if (strpos($answer_type, '1') !== false && $cnt_ans > 1) {
+                    $msg = "Incorrect! Your answer type is single but correct answer is multiple";
                 } else {
-                    $statusSuccess = true;
-                    // Reset old data
-                    // question info
-                    $title = "";
-                    $difficult = "";
-                    $answer_type = "";
-                    $status = "";
-                    $desc = "";
-                    // Answer info
-                    $answer1 = "";
-                    $answer2 = "";
-                    $answer3 = "";
-                    $answer4 = "";
-                    $answer5 = "";
-                    $correct_answer = "";
-                    $explain = "";
-                    $ans_sel = "";
+                    $sql = "INSERT INTO `tb_questions` (`q_id`, `q_title`, `q_desc`, `q_difficulty`, `q_answer_type`, `q_sel1`, `q_sel2`, `q_sel3`, `q_sel4`, `q_sel5`, `q_fig1`, `q_fig2`, `q_fig3`, `q_fig4`, `q_fig5`, `q_answer`, `q_explain`, `q_status`, `sub_id`) VALUES ";
+                    $sql .= "(NULL, '$title', '$desc', $difficult, $answer_type, '$answer1', '$answer2', '$answer3', '$answer4', '$answer5', '', '', '', '', '', '$ans_sel', '$explain', $status, $subject_id)";
+                    if (!mysqli_query($link, $sql)) {
+                        $statusFailed = true;
+                        $msg = "<span>Error </span>" . $sql . "<br>" . mysqli_error($link);
+                    } else {
+                        $statusSuccess = true;
+                        // Reset old data
+                        // question info
+                        $title = "";
+                        $difficult = "";
+                        $answer_type = "";
+                        $status = "";
+                        $desc = "";
+                        // Answer info
+                        $answer1 = "";
+                        $answer2 = "";
+                        $answer3 = "";
+                        $answer4 = "";
+                        $answer5 = "";
+                        $correct_answer = "";
+                        $explain = "";
+                        $ans_sel = "";
+                    }
                 }
             }
         }
@@ -490,6 +513,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include_once '../loading.php'; ?>
     </div>
 
+    <div class="modal fade" id="deleteItem" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                    <div class="modal-body text-center">
+                        <br/>
+                        <p class="text-gray" style="font-size: 70px">
+                            <i class="fa fa-question-circle-o"></i>
+                        </p>
+                        <h3 class="text-primary">Do you want to delete this question ?</h3>
+                        <br/>
+                        <input type="hidden" id="DEL" name="DEL" value=""/>
+                        <input type="hidden" name="q_id" class="q_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn bg-red delBtn" id="del_qt"><i class="fa fa-check-circle"></i>
+                            Delete
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <div class="pull-right hidden-xs">PHP - Online Exam</div>
         <strong>Copyright &copy; 2021 <a href="#">SWG9</a>.</strong> All rights reserved.
@@ -557,6 +608,86 @@ if ($statusFailed) {
     <?php
 }
 ?>
+<?php
+if ($delSuccess) {
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#modal-success-del-question").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-success-del-question" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-green" style="font-size: 70px">
+                        <i class="fa fa-check-circle"></i>
+                    </p>
+                    <h3 class="text-info">Delete Question Successfully</h3>
+                    <br/><br/>
+                    <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+if ($delWarn) {
+    ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#modal-success-warn-question").modal('show');
+        });
+    </script>
+    <div class="modal fade" id="modal-success-warn-question" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-gray" style="font-size: 70px">
+                        <i class="fa fa-info-circle"></i>
+                    </p>
+                    <h3 class="text-info">This Question already use</h3>
+                    <br/><br/>
+                    <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+if ($delFailed) {
+?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#modal-failed-del-question").modal('show');
+    });
+</script>
+<div class="modal fade" id="modal-failed-del-question" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <br/><br/>
+                <p class="text-red" style="font-size: 70px">
+                    <i class="fa fa-times-circle"></i>
+                </p>
+                <h3 class="text-info">Delete Question Unsuccessfully</h3>
+                <br/><br/>
+                <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+}
+?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.loading').show();
@@ -570,6 +701,12 @@ if ($statusFailed) {
     }
 </script>
 <script type="text/javascript">
+    $('button.show-btn-del').on('click', function () {
+        let qId = $(this).data('q-id');
+        $('input.q_id').val(qId);
+    });
+</script>
+<script type="text/javascript">
     $(function () {
         $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
             checkboxClass: 'icheckbox_flat-green',
@@ -578,6 +715,13 @@ if ($statusFailed) {
 
         $("#success-alert").fadeTo(15000, 500).slideUp(500, function () {
             $("#success-alert").slideUp(500);
+        });
+    });
+
+    $(document).ready(function () {
+        $('.delBtn').click(function () {
+            let ButtonID = $(this).attr('id');
+            $('#DEL').val(ButtonID);
         });
     });
 </script>
