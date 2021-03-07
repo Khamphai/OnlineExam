@@ -29,9 +29,10 @@
                         </li>
                         <li class="user-footer">
                             <div class="pull-left">
+                                <a href="#" class="btn bg-blue">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="../process/process_logout.php" class="btn btn-default btn-flat">Logout</a>
+                                <a href="../process/process_logout.php" class="btn bg-gray-active">Logout</a>
                             </div>
                         </li>
                     </ul>
