@@ -87,6 +87,7 @@ include_once '../process/connector.php';
                                 <th>No.</th>
                                 <th>Subject</th>
                                 <th>Date</th>
+                                <th>Question</th>
                                 <th>Level / Time</th>
                                 <th>Pass %</th>
                                 <th>Score</th>
@@ -97,7 +98,7 @@ include_once '../process/connector.php';
                             <tbody>
                             <?php
                             $user_id = $_SESSION['user_id'];
-                            $sql = "SELECT A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
+                            $sql = "SELECT A.TEST_ID, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, A.TEST_COUNT_QUESTION AS CNT_QT, A.ALL_QUESTION AS CNT_QT_ALL, B.TITLE AS SUB_TITLE, B.LEVEL AS LEVEL,
                                            B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT,
                                            C.NAME AS CAT_NAME FROM TB_TEST_RESULT A
                                                INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
@@ -120,7 +121,7 @@ include_once '../process/connector.php';
                                             }
                                         }
                                         $pass_percent = (int) $row['PASS_PERCENT'];
-                                        $mark_percent = round($percent/$count_score);
+                                        $mark_percent = round($percent/$row['CNT_QT_ALL']);
                                         if ($mark_percent >= $pass_percent) {
                                             $judge = "<span class='text-green text-bold'>PASSED</span>";
                                         }else{
@@ -146,6 +147,9 @@ include_once '../process/connector.php';
                                                 <span class="text-center badge bg-blue-active">
                                                 Use Time: <?= htmlspecialchars(gmdate("H:i:s", $row['TEST_MINUTE'])) ?>
                                             </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-blue text-bold"><?=htmlspecialchars($row['CNT_QT'])?></span> / <span class="text-blue text-bold"><?=htmlspecialchars($row['CNT_QT_ALL'])?></span>
                                             </td>
                                             <td>
                                                 <?php
