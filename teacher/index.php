@@ -168,7 +168,7 @@ $user_id = $_SESSION['user_id'];
                                                INNER JOIN TB_USERS U ON (A.USER_ID=U.USER_ID)
                                                INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
                                                INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
-                                    WHERE TEACHER_ID = $user_id
+                                    WHERE B.TEACHER_ID = $user_id
                                     ORDER BY A.TEST_ID DESC";
                             $result = mysqli_query($link, $sql);
                             $no = 0;

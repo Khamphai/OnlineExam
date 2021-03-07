@@ -8,6 +8,8 @@ include_once 'connector.php';
 $cat_id = $_SESSION['category_id'];
 $sub_id = $_SESSION['subject_id'];
 $answers = $_SESSION['answers'];
+$q_count = $_SESSION['q_count'];
+$answer_cnt = count($answers);
 $action = $_SESSION['action'];
 
 $time_use = $_SESSION['time']; // second e.g 300 sec
@@ -25,7 +27,7 @@ $state = true;
 // TODO :: Insert to tb_test_result
 $ts_date = date("Y-m-d");
 $user_id = $_SESSION['user_id'];
-$sql = "INSERT INTO `tb_test_result` (`test_id`, `test_date`, `test_minute`, `user_id`, `sub_id`) VALUES (NULL, CAST('". $ts_date ."' AS DATE), $test_minute, $user_id, $sub_id)";
+$sql = "INSERT INTO `tb_test_result` (`test_id`, `test_date`, `test_minute`, `test_count_question`, `all_question`, `user_id`, `sub_id`) VALUES (NULL, CAST('". $ts_date ."' AS DATE), $test_minute, $answer_cnt, $q_count, $user_id, $sub_id)";
 if (mysqli_query($link, $sql)) {
     $last_test_id = mysqli_insert_id($link);
     $_SESSION['test_id'] = $last_test_id;

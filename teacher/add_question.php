@@ -204,31 +204,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p class="alert bg-success text-center" style="font-size: large; margin-top: 20px;">
-                                <b>Category:</b> [<?= htmlspecialchars($data['CAT_NAME']) ?>]
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="alert bg-success text-center" style="font-size: large; margin-top: 20px;">
-                                <b>Subject:</b> [<?= htmlspecialchars($data['SUB_TITLE']) ?>]
-                            </p>
-                        </div>
-                    </div>
                     <div class="table-responsive">
                         <table class="table no-margin table-bordered table-hover">
                             <thead>
+                            <tr class="bg-gray-active">
+                                <th colspan="6">
+                                    <span style='font-weight: lighter !important;'>
+                                        <span class="text-center badge bg-teal-active">Category</span> &nbsp; <b>: &nbsp;<?= htmlspecialchars($data['CAT_NAME']) ?></b> &nbsp;&nbsp;
+                                        <span class="text-center badge bg-teal-active">Subject</span> &nbsp; <b>: &nbsp;<?= htmlspecialchars($data['SUB_TITLE']) ?></b>
+                                    </span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             <tr>
-                                <th>No.</th>
-                                <th>Question</th>
+                                <th style="width: 10px">No.</th>
+                                <th style="width: 50%">Question</th>
                                 <th>Level</th>
                                 <th>Answer Type</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            </thead>
-                            <tbody>
                             <?php
                             $sql = "SELECT A.*, B.*, C.* FROM TB_QUESTIONS A
                                             INNER JOIN TB_SUBJECTS B ON A.SUB_ID = B.SUB_ID
@@ -248,11 +244,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </td>
                                         <td>
                                             <?php
-                                            if ($row['level'] == 1) {
+                                            if ($row['q_difficulty'] == 1) {
                                                 echo "<span class=\"text-center badge bg-green\">Easiest</span>";
-                                            } else if ($row['level'] == 2) {
+                                            } else if ($row['q_difficulty'] == 2) {
                                                 echo "<span class=\"text-center badge bg-blue\">Normal</span>";
-                                            } else if ($row['level'] == 3) {
+                                            } else if ($row['q_difficulty'] == 3) {
                                                 echo "<span class=\"text-center badge bg-orange\">Difficult</span>";
                                             } else {
                                                 echo "<span class=\"text-center badge bg-red\">Most Difficult</span>";

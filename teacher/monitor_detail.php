@@ -9,7 +9,7 @@ if (empty($test_id) || empty($user_id)) {
 include_once '../process/connector.php';
 
 // Load info has relation
-$sql = "SELECT U.USER_ID, U.FULLNAME AS FULL_NAME, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
+$sql = "SELECT U.USER_ID, U.FULLNAME AS FULL_NAME, A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, A.TEST_COUNT_QUESTION AS CNT_QT, A.ALL_QUESTION AS CNT_QT_ALL, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
         B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT, C.NAME AS CAT_NAME, C.DESCRIPTION AS CAT_DESC FROM TB_TEST_RESULT A
             INNER JOIN TB_USERS U ON (A.USER_ID=U.USER_ID)
             INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
@@ -166,7 +166,7 @@ if($count_main != 1) header('Location: review.php');
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h4 class="box-title">
-                        View Detail your Testing
+                        View Detail your Testing [<b>Answer Question:</b> <span class="text-blue"><?=htmlspecialchars($data['CNT_QT'])?></span> of <span class="text-blue"><?=htmlspecialchars($data['CNT_QT_ALL'])?></span>]
                     </h4>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
@@ -190,7 +190,7 @@ if($count_main != 1) header('Location: review.php');
                             <thead>
                             <tr>
                                 <th colspan="4">
-                                    <h4><b>[Question <?=@++$no?> of <?=$count?>]</b></h4>
+                                    <h4><b>[Question <?=@++$no?> of <?=$data['CNT_QT_ALL']?>]</b></h4>
                                     <p style="font-weight: lighter !important;"><?=$row['q_title'];?></p>
                                     <h4><b>[Answer]</b></h4>
                                     <?php
@@ -374,7 +374,7 @@ if($count_main != 1) header('Location: review.php');
                         <div class="col-md-12">
                             <?php
                             $pass_percent = (int) $data['PASS_PERCENT'];
-                            $mark_percent = round($percent/$count);
+                            $mark_percent = round($percent/$data['CNT_QT_ALL']);
                             if ($mark_percent >= $pass_percent) {
                                 $judge = "<span class='text-green text-bold'>PASSED</span>";
                             }else{

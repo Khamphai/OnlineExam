@@ -12,7 +12,7 @@ $test_id = $_SESSION['test_id'];
 $q_count = $_SESSION['q_count'];
 
 // Load info has relation
-$sql = "SELECT A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
+$sql = "SELECT A.CREATED_AT AS TEST_DATE, A.TEST_MINUTE, A.TEST_COUNT_QUESTION AS CNT_QT, A.ALL_QUESTION AS CNT_QT_ALL, B.TITLE AS SUB_TITLE, B.DESCRIPTION AS SUB_DESC, 
         B.GIVE_MINUTE AS SUB_TIME, B.PASS_PERCENT, C.NAME AS CAT_NAME, C.DESCRIPTION AS CAT_DESC FROM TB_TEST_RESULT A
            INNER JOIN TB_SUBJECTS B ON (A.SUB_ID=B.SUB_ID)
            INNER JOIN TB_CATEGORY C ON(B.CAT_ID=C.CAT_ID)
@@ -159,7 +159,7 @@ $data = mysqli_fetch_assoc($result);
 
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h4 class="box-title">Your result testing score <b>[All Question: <span class="text-red"><?=$q_count?></span>]</b></h4>
+                        <h4 class="box-title">Your result testing score [<b>Answer Question:</b> <span class="text-blue"><?=htmlspecialchars($data['CNT_QT'])?></span> of <span class="text-blue"><?=htmlspecialchars($data['CNT_QT_ALL'])?></span>]</h4>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div>
