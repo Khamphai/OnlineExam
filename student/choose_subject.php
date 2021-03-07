@@ -170,7 +170,9 @@ if (isset($_POST['submit'])) {
                                     }
                                     ?>
                                 </td>
-                                <td><?=htmlspecialchars($row['pass_percent'])?> %</td>
+                                <td>
+                                    <span class='text-blue text-bold'><?= htmlspecialchars($row['pass_percent']) ?> %</span>
+                                </td>
                                 <td>
                                     <span class="text-center badge bg-aqua-active">
                                         <?=htmlspecialchars($row['give_minute'])?> Minute
