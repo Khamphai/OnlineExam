@@ -276,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </td>
                                             <td>
                                                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                                                    <a href="#" class="btn btn-sm bg-orange-active">EDIT <i
+                                                    <a href="../process/process_edit_question.php?qID=<?=htmlspecialchars($row['q_id'])?>" class="btn btn-sm bg-orange-active">EDIT <i
                                                                 class="fa fa-pencil"></i></a> &nbsp;
                                                     <button type="button"
                                                             data-toggle="modal"
@@ -332,10 +332,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <thead>
                                         <tr class="bg-gray-active">
                                             <th colspan="6">
-                                        <span style='font-weight: lighter !important;'>
-                                            <span class="text-center badge bg-teal-active">Category</span> &nbsp; <b>: &nbsp;<?= htmlspecialchars($data['CAT_NAME']) ?></b> &nbsp;&nbsp;
-                                            <span class="text-center badge bg-teal-active">Subject</span> &nbsp; <b>: &nbsp;<?= htmlspecialchars($data['SUB_TITLE']) ?></b>
-                                        </span>
+                                                <span style='font-weight: lighter !important;'>
+                                                    <span class="text-center badge bg-teal-active">Category</span> &nbsp; <b>: &nbsp;<?= htmlspecialchars($data['CAT_NAME']) ?></b> &nbsp;&nbsp;
+                                                    <span class="text-center badge bg-teal-active">Subject</span> &nbsp; <b>: &nbsp;<?= htmlspecialchars($data['SUB_TITLE']) ?></b>
+                                                </span>
                                             </th>
                                         </tr>
                                         </thead>
@@ -400,7 +400,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     </td>
                                                     <td>
                                                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                                                            <a href="#" class="btn btn-sm bg-orange-active">EDIT <i
+                                                            <a href="../process/process_edit_question.php?qID=<?=htmlspecialchars($row['q_id'])?>" class="btn btn-sm bg-orange-active">EDIT <i
                                                                         class="fa fa-pencil"></i></a> &nbsp;
                                                             <button type="button"
                                                                     data-toggle="modal"
