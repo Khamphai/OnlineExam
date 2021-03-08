@@ -11,7 +11,6 @@ $answers = $_SESSION['answers'];
 $q_count = $_SESSION['q_count'];
 $answer_cnt = count($answers);
 $action = $_SESSION['action'];
-$_SESSION['refresh'] = "";
 
 $time_use = $_SESSION['time']; // second e.g 300 sec
 $give_second = $_SESSION['give_minute'] * 60; // minute e.g 5 minute = 300 sec

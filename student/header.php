@@ -12,7 +12,7 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <?php
-                if (empty($_SESSION['refresh'])) {
+                if (empty($refresh)) {
                     ?>
                     <li class="dropdown messages-menu">
                         <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" onclick='window.location.reload(true);'>

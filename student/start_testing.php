@@ -8,6 +8,7 @@ if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id'])) {
 include_once '../process/connector.php';
 $cat_id = $_SESSION['category_id'];
 $sub_id = $_SESSION['subject_id'];
+$refresh = "no";
 
 // Load info has relation
 $sql = "SELECT A.TITLE AS SUB_TITLE, A.DESCRIPTION AS SUB_DESC, A.GIVE_MINUTE AS SUB_TIME,
@@ -31,7 +32,6 @@ $question = $_SESSION['question'];
 $_SESSION['q_count'] = count($question);
 $_SESSION['give_minute'] = $data['SUB_TIME'];
 $_SESSION['action'] = "next";
-$_SESSION['refresh'] = "no";
 
 $msg = "";
 $state = 0;
