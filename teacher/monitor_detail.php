@@ -69,8 +69,8 @@ if($count_main != 1) header('Location: review.php');
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
                 <li class="active"><a href="#"><i class="fa fa-bar-chart"></i> <span>Monitor</span></a></li>
-                <li><a href="category.php"><i class="fa fa-link"></i> <span>Category</span></a></li>
-                <li><a href="subject.php"><i class="fa fa-link"></i> <span>Subject</span></a></li>
+                <li><a href="category.php"><i class="fa fa-folder"></i> <span>Category</span></a></li>
+                <li><a href="subject.php"><i class="fa fa-folder-open"></i> <span>Subject</span></a></li>
                 <li><a href="question.php"><i class="fa fa-plus-circle"></i> <span>Question</span></a></li>
             </ul>
         </section>
