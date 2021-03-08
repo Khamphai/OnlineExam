@@ -2,7 +2,7 @@
 session_start();
 include_once '../process/process_check_authorize.php';
 if (empty($_SESSION['category_id'])) {
-    header('Location: index.php');
+    header('Location: choose_category.php');
 }
 include_once '../process/connector.php';
 $cat_id = $_SESSION['category_id'];
@@ -19,6 +19,7 @@ if (isset($_POST['submit'])) {
         $msg = "Please select subject before start testing...";
     } else {
         $_SESSION['subject_id'] = $subId;
+        setcookie("refcoke", "", 1);
         header('Location: start_testing.php');
     }
 }

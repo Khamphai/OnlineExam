@@ -3,7 +3,7 @@ session_start();
 include_once '../process/process_check_authorize.php';
 date_default_timezone_set("Asia/Bangkok");
 if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id'])) {
-    header('Location: index.php');
+    header('Location: choose_category.php');
 }
 include_once '../process/connector.php';
 $cat_id = $_SESSION['category_id'];
@@ -31,8 +31,10 @@ $question = $_SESSION['question'];
 $_SESSION['q_count'] = count($question);
 $_SESSION['give_minute'] = $data['SUB_TIME'];
 $_SESSION['action'] = "next";
+$_SESSION['refresh'] = "no";
 
 $msg = "";
+$state = 0;
 $qId = @$_POST['question_id'];
 $index = @$_POST['question_index'];;
 $ans_type = @$_POST['answer_type'];
@@ -42,7 +44,8 @@ $time_count = @$_POST['time_on'];
 if (!isset($_SESSION['answers'])) {
     $_SESSION['answers'] = array();
 }
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_SESSION["csrf_token"] == $_POST['csrf_token'])) {
+    $state = 1;
     // store count last time
     $_SESSION['time'] = (int) $time_count;
 
@@ -126,7 +129,7 @@ header( "refresh:$time_on; url=../process/process_score.php");
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-green fixed sidebar-mini">
+<body class="hold-transition skin-green fixed sidebar-mini" onload="checkFirstVisit()">
 <div class="wrapper">
 
     <?php include_once 'header.php'; ?>
@@ -255,6 +258,8 @@ header( "refresh:$time_on; url=../process/process_score.php");
                                 </thead>
                                 <tbody>
 
+                                <?php $_SESSION["csrf_token"] = md5(rand(0,10000000)).time();?>
+                                <input type="hidden" name="csrf_token" value="<?=htmlspecialchars($_SESSION["csrf_token"]);?>">
                                 <input type="hidden" name="question_index" value="<?=$index?>"/>
                                 <input type="hidden" name="question_id" value="<?=$question[$index]['q_id']?>"/>
                                 <input type="hidden" name="answer_type" value="<?=$question[$index]['q_answer_type']?>"/>
@@ -400,6 +405,24 @@ header( "refresh:$time_on; url=../process/process_score.php");
         </div>
     </div>
 
+    <div class="modal fade" id="modalRefresh" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <br/><br/>
+                    <p class="text-gray" style="font-size: 70px">
+                        <i class="fa fa-info-circle"></i>
+                    </p>
+                    <h3 class="text-info">You have been refresh browser</h3>
+                    <br/><br/>
+                    <a href="choose_category.php" class="btn bg-gray-active"><i class="fa fa-ban"></i>
+                        OK
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <div class="pull-right hidden-xs">PHP - Online Exam</div>
         <strong>Copyright &copy; 2021 <a href="#">SWG9</a>.</strong> All rights reserved.
@@ -410,6 +433,20 @@ header( "refresh:$time_on; url=../process/process_score.php");
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/plugins/iCheck/icheck.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    function checkFirstVisit() {
+        let state = <?=$state?>;
+        if(document.cookie.indexOf('refcoke')===-1) {
+            // cookie doesn't exist, create it now
+            document.cookie = 'refcoke=1';
+        } else {
+            if (state === 0) {
+                // not first visit, so alert
+                $("#modalRefresh").modal('show');
+            }
+        }
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.loading').show();
@@ -459,6 +496,18 @@ header( "refresh:$time_on; url=../process/process_score.php");
             }
         };
         cinterval = setInterval(timeDec, 1000);
+    });
+
+    function disable_f5(e)
+    {
+        if ((e.which || e.keyCode) === 116)
+        {
+            e.preventDefault();
+        }
+    }
+
+    $(document).ready(function(){
+        $(document).bind("keydown", disable_f5);
     });
 </script>
 </body>

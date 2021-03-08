@@ -11,7 +11,17 @@
         </a>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-
+                <?php
+                if (empty($_SESSION['refresh'])) {
+                    ?>
+                    <li class="dropdown messages-menu">
+                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" onclick='window.location.reload(true);'>
+                            <i class="fa fa-refresh fa-spin"></i> &nbsp; Refresh
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="../assets/img/user2-160x160.jpg" class="user-image" alt="User Image">
