@@ -192,6 +192,9 @@ if($count_main != 1) header('Location: review.php');
                                 <th colspan="4">
                                     <h4><b>[Question <?=@++$no?> of <?=$data['CNT_QT_ALL']?>]</b></h4>
                                     <p style="font-weight: lighter !important;"><?=$row['q_title'];?></p>
+                                    <span style="font-weight: lighter !important; font-size: 12px" class="text-blue">
+                                        <span class="text-center badge bg-gray-active">Description</span>&nbsp; <?=$row['q_desc'];?>
+                                    </span>
                                     <h4><b>[Answer]</b></h4>
                                     <?php
                                     if ($row['sc_judge'] === 'Good') {

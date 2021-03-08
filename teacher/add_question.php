@@ -729,6 +729,9 @@ if ($view) {
                                 <th colspan="3">
                                     <h4><b>[Question]</b></h4>
                                     <p style="font-weight: lighter !important;"><?=htmlspecialchars($v_row['q_title']);?></p>
+                                    <span style="font-weight: lighter !important; font-size: 12px" class="text-blue">
+                                        <span class="text-center badge bg-gray-active">Description</span>&nbsp; <?=$v_row['q_desc'];?>
+                                    </span>
                                     <h4><b>[Answer]</b></h4>
                                 </th>
                             </tr>
