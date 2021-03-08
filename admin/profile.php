@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li><a href="#"><i class="fa fa-user-circle"></i> <span>Users</span></a></li>
+                <li><a href="index.php"><i class="fa fa-user-circle"></i> <span>Users</span></a></li>
             </ul>
         </section>
     </aside>

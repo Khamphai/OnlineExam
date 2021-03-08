@@ -1,5 +1,7 @@
 <?php
 session_start();
+include_once '../process/process_check_authorize.php';
+include_once '../process/connector.php';
 
 ?>
 <!DOCTYPE html>
@@ -14,6 +16,7 @@ session_start();
     <link rel="stylesheet" href="../assets/plugins/Ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
+    <link rel="stylesheet" href="../assets/css/exam.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green sidebar-mini">
@@ -29,7 +32,7 @@ session_start();
                     <img src="../assets/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Khamphai KNVS</p>
+                    <p><?= htmlspecialchars($_SESSION['full_name']) ?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
@@ -46,19 +49,7 @@ session_start();
 
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">HEADER</li>
-                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-                        <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#">Link in level 2</a></li>
-                        <li><a href="#">Link in level 2</a></li>
-                    </ul>
-                </li>
+                <li class="active"><a href="#"><i class="fa fa-user-circle"></i> <span>Users</span></a></li>
             </ul>
         </section>
     </aside>
@@ -66,12 +57,12 @@ session_start();
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Home
-                <small>Admin</small>
+                User
+                <small>Administrator</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">Here</li>
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">list user</li>
             </ol>
         </section>
 
@@ -82,7 +73,24 @@ session_start();
               | Your Page Content Here |
               -------------------------->
 
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Users management</h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+
+                </div>
+            </div>
+            <!-- /.box -->
+
         </section>
+
+        <?php include_once '../loading.php'; ?>
     </div>
 
     <footer class="main-footer">
@@ -94,5 +102,17 @@ session_start();
 <script src="../assets/plugins/jquery/dist/jquery.min.js"></script>
 <script src="../assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../assets/js/adminlte.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.loading').show();
+        $('.overlay').show();
+        setTimeout("callback()", 600);
+    });
+
+    function callback() {
+        $('.loading').hide();
+        $('.overlay').hide();
+    }
+</script>
 </body>
 </html>
