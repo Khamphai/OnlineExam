@@ -186,7 +186,7 @@ include_once '../process/connector.php';
                             } else {
                                 ?>
                                 <tr>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
                                             Not found your exam [<a href="choose_category.php" class="text-green">Get
                                                 starting</a>]
