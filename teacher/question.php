@@ -35,10 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delWarn = true;
         } else {
             $sql = "DELETE FROM tb_questions WHERE q_id = $q_id";
-            $result = mysqli_query($link, $sql);
             if (!mysqli_query($link, $sql)) {
                 $delFailed = true;
-                $msg = "<span>Error </span>" . $sql . "<br>" . mysqli_error($link);
+                $msg = "Error :: " . $sql . "\n" . mysqli_error($link);
             } else {
                 $delSuccess = true;
             }
@@ -564,6 +563,7 @@ if ($delFailed) {
                         <i class="fa fa-times-circle"></i>
                     </p>
                     <h3 class="text-info">Delete Question Unsuccessfully</h3>
+                    <p><?=htmlspecialchars($msg)?></p>
                     <br/><br/>
                     <button type="button" data-dismiss="modal" class="btn bg-gray-active"><i class="fa fa-ban"></i>
                         Close
