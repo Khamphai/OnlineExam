@@ -310,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </td>
                                         <td>
                                             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                                                <a href="#" class="btn btn-sm bg-orange-active">EDIT <i
+                                                <a href="../process/process_edit_question.php?qID=<?=htmlspecialchars($row['q_id'])?>" class="btn btn-sm bg-orange-active">EDIT <i
                                                             class="fa fa-pencil"></i></a> &nbsp;
                                                 <button type="button"
                                                         data-toggle="modal"
