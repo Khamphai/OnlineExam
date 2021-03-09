@@ -4,6 +4,10 @@ include_once '../process/process_check_authorize.php';
 include_once '../process/connector.php';
 $user_id = $_SESSION['user_id'];
 
+$sql_all = "SELECT COUNT(*) AS USER_CNT FROM tb_users";
+$result_all = mysqli_query($link, $sql_all);
+$data_all = mysqli_fetch_assoc($result_all);
+
 $msg = "";
 $delSuccess = false;
 $delWarn = false;
@@ -121,12 +125,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               | Your Page Content Here |
               -------------------------->
 
+            <?php
+            print_r($data_cnt);
+            ?>
+
             <div class="row">
                 <div class="col-lg-3 col-xs-6">
                     <!-- small box -->
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>6</h3>
+                            <h3>
+                                <?php
+                                if (count($data_all) > 0) {
+                                    echo htmlspecialchars($data_all['USER_CNT']);
+                                }else{
+                                    echo 0;
+                                }
+                                ?>
+                            </h3>
 
                             <p>Total Users</p>
                         </div>
@@ -141,7 +157,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- small box -->
                     <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>1<sup style="font-size: 20px"></sup></h3>
+                            <h3>
+                                1
+                            </h3>
 
                             <p>Admin</p>
                         </div>
@@ -171,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- small box -->
                     <div class="small-box bg-orange">
                         <div class="inner">
-                            <h3>3</h3>
+                            <h3>4</h3>
 
                             <p>Student</p>
                         </div>
