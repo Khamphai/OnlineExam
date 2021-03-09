@@ -1,7 +1,12 @@
 <?php
 include_once '../process/connector.php';
-// INSERT
+
+$sub_id = @$_GET['sub_id'];
+
+// Edit
 if (isset($_POST['submit'])) {
+
+    $sub_id = $_POST['sub_id'];
     $title = $_POST['title'];
     $description = $_POST['description'];
     $level = $_POST['level'];
@@ -13,14 +18,13 @@ if (isset($_POST['submit'])) {
     $teacher_id = $_POST['teacher_id'];
 
 
+    if (!empty($sub_id) && !empty($title) && !empty($description) && !empty($level) && !empty($give_minute) && !empty($pass_percent) && !empty($use_count) && !empty($status) && !empty($cat_id) && !empty($teacher_id)) {
 
-    if (!empty($title) && !empty($description) && !empty($level) && !empty($give_minute) && !empty($pass_percent) && !empty($use_count) && !empty($status) && !empty($cat_id) && !empty($teacher_id)) {
-
-        $sql = "INSERT INTO `tb_subjects` (`title`, `description`, `level`, `give_minute`, `pass_percent`, `use_count`, `status`, `cat_id`, `teacher_id`) VALUES ('$title','$description','$level','$give_minute','$pass_percent','$use_count','$status','$cat_id','$teacher_id')";
+        $sql = "UPDATE `tb_subjects` SET title='$title', description='$description', level='$level', give_minute='$give_minute', pass_percent='$pass_percent', use_count='$use_count', status='$status', cat_id='$cat_id', teacher='$teacher_id' WHERE sub_id=$sub_id";
         if (!mysqli_query($link, $sql)){
             echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
         }else{
-            header('Location: subject.php');
+            header('Location: category.php');
         }
         mysqli_close($link);
     } else {
@@ -34,7 +38,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Exam | Add-Subject</title>
+    <title>Exam | Edit-Subject</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="../assets/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">
@@ -151,12 +155,12 @@ if (isset($_POST['submit'])) {
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                Add-Subject
+                Edit-Subject
                 <small>Teacher</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-clipboard"></i>Subject</a></li>
-                <li class="active">Add</li>
+                <li class="active">Edit</li>
             </ol>
         </section>
 
@@ -173,37 +177,57 @@ if (isset($_POST['submit'])) {
                     <div class="box box-primary">
 
                         <!-- /.box-header -->
+
                         <!-- form start -->
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <input type="hidden" value="<?=htmlspecialchars($sub_id);?>" name="sub_id"/>
+                            <?php
+                            $sql = "SELECT * FROM tb_subjects WHERE sub_id=$sub_id";
+                            $result = mysqli_query($link, $sql);
+                            $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                            ?>
                             <div class="box-body">
-
                                 <div class="form-group">
                                     <label for="name">Subject Title</label>
-                                    <input type="text" class="form-control" name="title" placeholder="Enter Subject Title">
+                                    <input type="text" class="form-control" name="title"
+                                           value="<?=htmlspecialchars($data['title']);?>"
+                                           placeholder="Enter Subject Title">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Description</label>
-                                    <input type="text" class="form-control" name="description" placeholder="Enter Description">
+                                    <input type="text" class="form-control" name="description"
+                                           value="<?=htmlspecialchars($data['description']);?>"
+                                           placeholder="Enter Description">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Level</label>
-                                    <input type="number" class="form-control" name="level" placeholder="Enter Level">
+                                    <input type="number" class="form-control" name="level"
+                                           value="<?=htmlspecialchars($data['level']);?>"
+                                           placeholder="Enter Level">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Give Minute</label>
-                                    <input type="number" class="form-control" name="give_minute" placeholder="Enter Give Minute">
+                                    <input type="number" class="form-control" name="give_minute"
+                                           value="<?=htmlspecialchars($data['give_minute']);?>"
+                                           placeholder="Enter Give Minute">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Pass Percent%</label>
-                                    <input type="number" class="form-control" name="pass_percent" placeholder="Enter Pass Percent%">
+                                    <input type="number" class="form-control" name="pass_percent"
+                                           value="<?=htmlspecialchars($data['pass_percent']);?>"
+                                           placeholder="Enter Pass Percent%">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Use Count</label>
-                                    <input type="number" class="form-control" name="use_count" placeholder="Enter Use Count">
+                                    <input type="number" class="form-control" name="use_count"
+                                           value="<?=htmlspecialchars($data['use_count']);?>"
+                                           placeholder="Enter Use Count">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Status</label>
-                                    <input type="number" class="form-control" name="status" placeholder="Enter Status">
+                                    <input type="number" class="form-control" name="status"
+                                           value="<?=htmlspecialchars($data['status']);?>"
+                                           placeholder="Enter Status">
                                 </div>
 
                                 <label for="name">Category</label>
@@ -222,15 +246,13 @@ if (isset($_POST['submit'])) {
 
                                 <div class="form-group">
                                     <label for="name">Teacher</label>
-                                    <input type="number" class="form-control" name="teacher_id" placeholder="2">
+                                    <input type="number" class="form-control" name="teacher_id"
+                                           value="<?=htmlspecialchars($data['teacher_id']);?>"
+                                           placeholder="2">
                                 </div>
 
-
-
-                                <!-- /.box-body -->
-
                                 <div class="box-footer">
-                                    <input type="submit" name="submit" class="btn bg-blue" value="Submit">
+                                    <input type="submit" name="submit" class="btn btn-primary" value="Submit">
                                 </div>
                         </form>
                     </div>
