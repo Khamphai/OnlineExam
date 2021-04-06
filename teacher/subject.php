@@ -41,7 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../assets/css/skins/skin-green.min.css">
     <link rel="stylesheet" href="../assets/css/exam.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-green fixed sidebar-mini">
 <div class="wrapper">
@@ -126,16 +127,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $sql = "SELECT * FROM `tb_subjects` WHERE `teacher_id`=$user_id";
-                            $result = mysqli_query($link, $sql);
-                            $no = 0;
+                        <?php
+                        $sql = "SELECT * FROM `tb_subjects` WHERE `teacher_id`=$user_id";
+                        $result = mysqli_query($link, $sql);
+                        $count = mysqli_num_rows($result);
+                        $no = 0;
+                        if ($count > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 ?>
                                 <tr>
-                                    <td><?=@++$no?></td>
-                                    <td><?=htmlspecialchars($row['title'])?></td>
-                                    <td><?=htmlspecialchars($row['description'])?></td>
+                                    <td><?= @++$no ?></td>
+                                    <td><?= htmlspecialchars($row['title']) ?></td>
+                                    <td><?= htmlspecialchars($row['description']) ?></td>
                                     <td>
                                         <?php
                                         if ($row['level'] == 1) {
@@ -181,7 +184,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </tr>
                                 <?php
                             }
+                        } else {
                             ?>
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
+                                        Not found the subject
+                                    </p>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+
                         </tbody>
                     </table>
                 </div>

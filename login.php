@@ -3,7 +3,7 @@ session_start();
 include_once 'process/connector.php';
 
 // check state
-if ($_SESSION['state'] === 'login') {
+if (@$_SESSION['state'] === 'login') {
     header("Location: index.php");
 }
 

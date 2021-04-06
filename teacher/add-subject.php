@@ -160,10 +160,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                            placeholder="Enter Description">
                                 </div>
                                 <div class="form-group">
-                                    <label for="name">Use Count</label>
-                                    <input type="number" class="form-control" name="use_count"
-                                           value="<?=htmlspecialchars($use_count)?>"
-                                           placeholder="Enter Use Count">
+                                    <label for="name">Category</label>
+                                    <select name="cat_id" class="form-control select2">
+                                        <option value="">Select Category</option>
+                                        <?php
+                                        $sql = "select cat_id, name from tb_category WHERE teacher_id=$user_id";
+                                        $result = mysqli_query($link, $sql);
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            ?>
+                                            <option value="<?= $row['cat_id']; ?>" <?php if (@$cat_id === $row['cat_id']) echo "selected"; ?>><?= $row['name']; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Level</label><br/>
@@ -196,19 +205,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                            placeholder="Enter Pass Percent">
                                 </div>
                                 <div class="form-group">
-                                    <label for="name">Category</label>
-                                    <select name="cat_id" class="form-control select2">
-                                        <option value="">Select Category</option>
-                                        <?php
-                                        $sql = "select cat_id, name from tb_category";
-                                        $result = mysqli_query($link, $sql);
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            ?>
-                                            <option value="<?= $row['cat_id']; ?>" <?php if (@$cat_id === $row['cat_id']) echo "selected"; ?>><?= $row['name']; ?></option>
-                                            <?php
-                                        }
-                                        ?>
-                                    </select>
+                                    <label for="name">Use Count</label>
+                                    <input type="number" class="form-control" name="use_count"
+                                           value="<?=htmlspecialchars($use_count)?>"
+                                           placeholder="Enter Use Count">
                                 </div>
                                 <div class="form-group">
                                     <label for="status">Status</label><br/>

@@ -254,7 +254,7 @@ $user_id = $_SESSION['user_id'];
                             } else {
                                 ?>
                                 <tr>
-                                    <td colspan="9" class="text-center">
+                                    <td colspan="10" class="text-center">
                                         <p class="alert bg-danger" style="font-size: large; margin-top: 20px;">
                                             Not found the exam result
                                         </p>

@@ -2,7 +2,7 @@
 session_start();
 include_once '../process/process_check_authorize.php';
 if (empty($_SESSION['category_id']) || empty($_SESSION['subject_id']) || empty($_SESSION['answers'])) {
-    header('Location: index.php');
+    header('Location: ../student/choose_category.php');
 }
 include_once 'connector.php';
 $cat_id = $_SESSION['category_id'];
