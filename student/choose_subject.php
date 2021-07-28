@@ -144,7 +144,7 @@ if (isset($_POST['submit'])) {
                             </thead>
                             <tbody>
                             <?php
-                            $sql = "SELECT * FROM TB_SUBJECTS WHERE CAT_ID = $cat_id";
+                            $sql = "SELECT * FROM TB_SUBJECTS WHERE CAT_ID = $cat_id AND status=1";
                             $result = mysqli_query($link, $sql);
                             $count = mysqli_num_rows($result);
                             if ($count > 0) {

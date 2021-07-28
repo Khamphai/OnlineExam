@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Mar 09, 2021 at 12:24 PM
+-- Generation Time: Jul 28, 2021 at 12:22 PM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -35,13 +35,13 @@ CREATE TABLE `tb_category` (
 
 INSERT INTO `tb_category` (`cat_id`, `name`, `description`, `teacher_id`, `created_at`, `updated_at`) VALUES
 (1, 'Networking', 'TCP/IP network training', 2, '2021-02-21 05:06:21', '2021-02-21 05:06:23'),
-(2, 'Linux Administration', 'Linux administrator training', 5, '2021-02-21 05:06:21', '2021-02-21 05:06:23'),
 (3, 'Windows Administration', 'Windows server administrator training', 5, '2021-02-21 05:06:21', '2021-02-21 05:06:23'),
 (4, 'WWW General', 'Training for World Wide Web scheme such as HTTP, HTML, CGI', 5, '2021-02-21 05:08:28', '2021-02-21 05:08:28'),
 (5, 'Oracle 10g Database (DBA)', 'Administrator of Oracle 10g Database training', 2, '2021-02-21 05:08:28', '2021-02-21 05:08:28'),
 (6, 'MySQL Database', 'MySQL Database administrator training', 2, '2021-02-21 05:08:28', '2021-02-21 05:08:28'),
 (7, 'UML', 'Unified Modeling Language training', 5, '2021-02-21 05:08:28', '2021-02-21 05:08:28'),
-(8, 'IBM Homepage builder', 'Web contents authoring tool training', 2, '2021-02-21 05:08:28', '2021-02-21 05:08:28');
+(8, 'IBM Homepage builder', 'Web contents authoring tool training', 2, '2021-02-21 05:08:28', '2021-02-21 05:08:28'),
+(9, 'IoT', 'Internet of things', 2, '2021-04-06 10:56:19', '2021-04-06 10:56:19');
 
 -- --------------------------------------------------------
 
@@ -88,7 +88,10 @@ INSERT INTO `tb_questions` (`q_id`, `q_title`, `q_desc`, `q_difficulty`, `q_answ
 (7, 'How many join types in join condition ?', '', 4, 1, '2', '3', '4', '5', '', '', '', '', '', '', '4', 'INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN, EQUIJOIN.', NULL, 1, '2021-03-07 07:00:20', '2021-03-07 07:00:20', 2),
 (8, 'Which are the join types in join condition ?', '', 1, 1, 'Cross join', 'Natural join', 'Join with USING clause', 'All of the mentioned', '', '', '', '', '', '', '4', 'INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN, EQUIJOIN are the types of joins.', NULL, 1, '2021-03-07 07:01:51', '2021-03-07 07:01:51', 2),
 (9, 'Which join refers to join records from the write table that have no matching key in the left table are include in the result set ?', '', 3, 1, 'Left outer join', 'Right outer join', 'Full outer join', 'None of the above', '', '', '', '', '', '', '2', 'Right outer join refers to join records from the write table that have no matching key in the left table are include in the result set', NULL, 1, '2021-03-07 07:54:22', '2021-03-07 07:54:22', 2),
-(11, 'Test qt', '', 1, 1, 'AAa', 'CC', '', '', '', '', '', '', '', '', '1', '', NULL, 0, '2021-03-09 12:04:35', '2021-03-09 12:04:35', 4);
+(11, 'Test qt', '', 1, 1, 'AAa', 'CC', '', '', '', '', '', '', '', '', '1', '', NULL, 0, '2021-03-09 12:04:35', '2021-03-09 12:04:35', 4),
+(12, 'How many types of arduinos do we have?', 'Test desc', 1, 1, '5', '6', '7', '8', '', '', '', '', '', '', '4', 'There are 4 Arduino boards and 4 Arduino shields that fit on top of Arduino compatible boards to provide additional capability like connecting to the internet, motor controller, LCD screen controlling etc.,.', NULL, 1, '2021-04-06 11:00:55', '2021-04-06 11:00:55', 6),
+(13, 'What is the microcontroller used in Arduino UNO?', '', 3, 1, 'ATmega328p', 'ATmega2560', 'ATmega32114', 'AT91SAM3x8E', '', '', '', '', '', '', '1', 'ATmega328p is a microcontroller which is 32KB of flash ROM and 8-bit microcontroller.', NULL, 1, '2021-04-06 11:07:08', '2021-04-06 11:07:08', 6),
+(14, 'What is the default bootloader of the Arduino UNO?', '', 4, 1, 'Optiboot bootloader', 'AIR-boot', 'Bare box', 'GAG', '', '', '', '', '', '', '1', 'The optiboot bootloader will take 512 bytes, leaving 32256 bytes for application code. Due to its small size larger up-loadable sketch size is achieved.', NULL, 1, '2021-04-06 12:36:56', '2021-04-06 12:36:56', 6);
 
 -- --------------------------------------------------------
 
@@ -137,7 +140,31 @@ INSERT INTO `tb_score` (`sc_choice`, `sc_answer`, `sc_judge`, `test_id`, `q_id`)
 ('2,5', '2,5', 'Good', 8, 2),
 ('1', '1', 'Good', 8, 4),
 ('2', '2', 'Good', 8, 5),
-('1', '1', 'Good', 8, 6);
+('1', '1', 'Good', 8, 6),
+('2,5', '2,5', 'Good', 9, 2),
+('1', '1', 'Good', 9, 4),
+('2', '2', 'Good', 9, 5),
+('1', '1', 'Good', 9, 6),
+('2', '4', 'N.G', 10, 7),
+('1', '4', 'N.G', 10, 8),
+('1', '2', 'N.G', 10, 9),
+('1,2', '2,5', 'N.G', 11, 2),
+('1', '1', 'Good', 11, 4),
+('2', '2', 'Good', 11, 5),
+('1', '1', 'Good', 11, 6),
+('4', '4', 'Good', 14, 12),
+('3', '4', 'N.G', 15, 12),
+('1', '1', 'Good', 15, 13),
+('2,5', '2,5', 'Good', 16, 2),
+('1', '1', 'Good', 16, 4),
+('2', '2', 'Good', 16, 5),
+('1', '1', 'Good', 16, 6),
+('2', '4', 'N.G', 17, 7),
+('3', '4', 'N.G', 17, 8),
+('3', '2', 'N.G', 17, 9),
+('3', '4', 'N.G', 18, 12),
+('1', '1', 'Good', 18, 13),
+('3', '1', 'N.G', 18, 14);
 
 -- --------------------------------------------------------
 
@@ -167,7 +194,9 @@ CREATE TABLE `tb_subjects` (
 INSERT INTO `tb_subjects` (`sub_id`, `title`, `description`, `level`, `give_minute`, `pass_percent`, `use_count`, `status`, `created_at`, `updated_at`, `cat_id`, `teacher_id`) VALUES
 (1, 'Basic of Oracle SQL', 'Test the fundamental knowledge of SQL', 1, 5, 100, 2, 1, '2021-02-21 05:15:17', '2021-02-21 05:15:19', 5, 2),
 (2, 'Table Join with SQL', 'Test the knowledge of JOIN option of SQL', 3, 20, 60, 2, 1, '2021-02-21 05:15:17', '2021-02-21 05:15:19', 5, 2),
-(4, 'Test 2', 'Okay', 4, 20, 40, 1, 0, '2021-03-09 11:42:13', '2021-03-09 11:42:13', 1, 2);
+(4, 'Test 2', 'Okay', 4, 20, 40, 1, 0, '2021-03-09 11:42:13', '2021-03-09 11:42:13', 1, 2),
+(5, 'Window server', 'Window server system management (Test)', 3, 1, 65, 2, 1, '2021-04-06 07:36:00', '2021-04-06 07:36:00', 3, 5),
+(6, 'Basic Arduino', 'Arduino Uno board', 2, 10, 75, 1, 0, '2021-04-06 10:59:10', '2021-04-06 10:59:10', 9, 2);
 
 -- --------------------------------------------------------
 
@@ -198,7 +227,17 @@ INSERT INTO `tb_test_result` (`test_id`, `test_date`, `test_minute`, `test_count
 (5, '2021-03-08', 12, 3, 3, '2021-03-08 08:54:05', 6, 2),
 (6, '2021-03-08', 10, 4, 6, '2021-03-08 09:00:45', 6, 1),
 (7, '2021-03-08', 9, 3, 3, '2021-03-08 09:08:31', 6, 2),
-(8, '2021-03-09', 20, 5, 5, '2021-03-09 11:02:03', 6, 1);
+(8, '2021-03-09', 20, 5, 5, '2021-03-09 11:02:03', 6, 1),
+(9, '2021-03-13', 55, 4, 4, '2021-03-13 01:17:49', 6, 1),
+(10, '2021-03-29', 9, 3, 3, '2021-03-29 12:06:18', 1, 2),
+(11, '2021-03-29', 12, 4, 4, '2021-03-29 12:16:32', 6, 1),
+(12, '2021-04-06', 60, 0, 0, '2021-04-06 07:47:21', 6, 5),
+(13, '2021-04-06', 60, 0, 0, '2021-04-06 07:54:49', 6, 5),
+(14, '2021-04-06', 11, 1, 1, '2021-04-06 11:03:31', 1, 6),
+(15, '2021-04-06', 17, 2, 2, '2021-04-06 11:08:01', 1, 6),
+(16, '2021-04-06', 97, 4, 4, '2021-04-06 12:28:35', 9, 1),
+(17, '2021-04-06', 9, 3, 3, '2021-04-06 12:29:54', 9, 2),
+(18, '2021-04-06', 16, 3, 3, '2021-04-06 12:43:17', 9, 6);
 
 -- --------------------------------------------------------
 
@@ -223,12 +262,12 @@ CREATE TABLE `tb_users` (
 
 INSERT INTO `tb_users` (`user_id`, `email`, `password`, `fullname`, `role`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'student@swg9.la', 'f2627417566b0b7effab602fa9f5447c', 'Student', 'student', 1, '2021-02-21 05:17:45', '2021-02-21 05:17:46'),
-(2, 'teacher@swg9.la', '6b7f29a4feeb2bcf8d9de882d2030a5e', 'Teacher SWG9', 'teacher', 1, '2021-02-21 05:17:45', '2021-02-21 05:17:46'),
+(2, 'teacher@swg9.la', '6b7f29a4feeb2bcf8d9de882d2030a5e', 'Teacher SWG9', 'teacher', 1, '2021-02-21 05:17:45', '2021-03-29 12:09:43'),
 (3, 'admin@swg9.la', '31ad2f10870bb5e4c517357bf9f95e58', 'Administrator', 'admin', 1, '2021-02-21 05:17:45', '2021-02-21 05:17:46'),
-(4, 'khout@swg9.la', 'b345b94e859379fc760ea7f11518cb08', 'KHOUTNALIN SWG9', 'student', 1, '2021-02-22 09:22:11', '2021-02-22 09:22:11'),
-(5, 'tadam@swg9.la', 'b345b94e859379fc760ea7f11518cb08', 'Tadam TC', 'teacher', 0, '2021-03-02 15:04:22', '2021-03-09 11:11:11'),
+(5, 'khout@swg9.la', '5df1a9e25112574ab7adac04f2f46bc8', 'KHOUTNALIN', 'teacher', 1, '2021-03-02 15:04:22', '2021-03-29 12:08:14'),
 (6, 'khamphai@swg9.la', 'b345b94e859379fc760ea7f11518cb08', 'KPhai SWG9', 'student', 1, '2021-03-06 04:18:50', '2021-03-06 04:18:50'),
-(7, 'phai@swg9.la', 'b345b94e859379fc760ea7f11518cb08', 'Phai SWG9', 'student', 1, '2021-03-09 07:12:20', '2021-03-09 12:15:54');
+(7, 'tadam@swg9.la', '6b7f29a4feeb2bcf8d9de882d2030a5e', 'Tadam SWG9', 'admin', 1, '2021-03-09 07:12:20', '2021-03-29 12:11:34'),
+(9, 'khamphet@swg9.la', '5df1a9e25112574ab7adac04f2f46bc8', 'Khamphet', 'student', 1, '2021-04-06 12:25:18', '2021-04-06 12:25:18');
 
 --
 -- Indexes for dumped tables
@@ -285,31 +324,31 @@ ALTER TABLE `tb_users`
 -- AUTO_INCREMENT for table `tb_category`
 --
 ALTER TABLE `tb_category`
-    MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+    MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tb_questions`
 --
 ALTER TABLE `tb_questions`
-    MODIFY `q_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+    MODIFY `q_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tb_subjects`
 --
 ALTER TABLE `tb_subjects`
-    MODIFY `sub_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+    MODIFY `sub_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tb_test_result`
 --
 ALTER TABLE `tb_test_result`
-    MODIFY `test_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+    MODIFY `test_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `tb_users`
 --
 ALTER TABLE `tb_users`
-    MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+    MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
